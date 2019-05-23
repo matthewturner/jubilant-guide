@@ -6,7 +6,7 @@ sonar = HCSR04(board.D9, board.D8, timeout=5)
 def is_infront():
   try:
     print(sonar.distance)
-    return sonar.distance <= 11
+    return sonar.distance <= 6
   except RuntimeError:
     print("Retrying!")
     pass
