@@ -4,7 +4,7 @@
         {
             "label": "Deploy",
             "type": "shell",
-            "command": "copy *.py d:\\",
+            "command": "xcopy /v /d /y /u *.py d:\\",
             "group": {
                 "kind": "build",
                 "isDefault": true

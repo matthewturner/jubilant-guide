@@ -6,3 +6,6 @@ led.direction = Direction.OUTPUT
 
 def on():
   led.value = True
+
+def off():
+  led.value = False

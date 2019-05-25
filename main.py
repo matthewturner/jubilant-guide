@@ -13,17 +13,20 @@ queue = Queue()
 
 def check_in_front():
   if something.is_infront():
-    print('Turning...')
+    led.on()
     motion.turn_right(90)
   else:
-    print('Moving forward...')
+    led.off()
     motion.forward()
-  queue.enqueue(check_in_front, 0.5)
-
-queue.enqueue(check_in_front, 0.5)
 
 i = 0
-while True:
+def show_swirl():
+  global i
   swirl.next(i)
-  queue.work_off()
   i = (i+1) % 256
+
+queue.enqueue(check_in_front, delay=0.5, repeat=True)
+queue.enqueue(show_swirl, repeat=True)
+
+while True:
+  queue.work_off()
