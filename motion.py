@@ -11,13 +11,16 @@ REVERSING = 4
 
 __status = STOPPED
 
+
 def status():
-  global __status
-  return __status
+    global __status
+    return __status
+
 
 def set_status(status):
-  global __status
-  __status = status
+    global __status
+    __status = status
+
 
 motor_right_forward = DigitalInOut(board.D2)
 motor_right_forward.direction = Direction.OUTPUT
@@ -34,64 +37,75 @@ motor_left_reverse.direction = Direction.OUTPUT
 speed = AnalogOut(board.A0)
 speed.value = 55000
 
-def turn(right, degrees):
-  desired = TURNING_RIGHT if right else TURNING_LEFT
-  if status() == desired: return 
-  set_status(desired)
-  message = 'Turning right...' if right else 'Turning left...'
-  print(message)
-  motor_right_forward.value = right
-  motor_right_reverse.value = not right
 
-  motor_left_forward.value = not right
-  motor_left_reverse.value = right
-  time_to_turn = 360 / degrees / 4
-  time.sleep(time_to_turn)
-  stop()
+def turn(right, degrees):
+    desired = TURNING_RIGHT if right else TURNING_LEFT
+    if status() == desired:
+        return
+    set_status(desired)
+    message = 'Turning right...' if right else 'Turning left...'
+    print(message)
+    motor_right_forward.value = right
+    motor_right_reverse.value = not right
+
+    motor_left_forward.value = not right
+    motor_left_reverse.value = right
+    time_to_turn = 360 / degrees / 4
+    time.sleep(time_to_turn)
+    stop()
+
 
 def turn_right(degrees):
-  turn(True, degrees)
+    turn(True, degrees)
+
 
 def turn_left(degrees):
-  turn(False, degrees)
+    turn(False, degrees)
+
 
 def forward():
-  if status() == FORWARD: return
-  set_status(FORWARD)
-  print('Moving forward...')
-  motor_right_forward.value = True
-  motor_right_reverse.value = False
+    if status() == FORWARD:
+        return
+    set_status(FORWARD)
+    print('Moving forward...')
+    motor_right_forward.value = True
+    motor_right_reverse.value = False
 
-  motor_left_forward.value = True
-  motor_left_reverse.value = False
+    motor_left_forward.value = True
+    motor_left_reverse.value = False
+
 
 def reverse():
-  if status() == REVERSING: return
-  set_status(REVERSING)
-  print('Reversing...')
-  motor_right_forward.value = False
-  motor_right_reverse.value = True
+    if status() == REVERSING:
+        return
+    set_status(REVERSING)
+    print('Reversing...')
+    motor_right_forward.value = False
+    motor_right_reverse.value = True
 
-  motor_left_forward.value = False
-  motor_left_reverse.value = True
+    motor_left_forward.value = False
+    motor_left_reverse.value = True
+
 
 def stop():
-  if status() == STOPPED: return
-  set_status(STOPPED)
-  print('Stopping...')
-  motor_right_forward.value = False
-  motor_right_reverse.value = False
+    if status() == STOPPED:
+        return
+    set_status(STOPPED)
+    print('Stopping...')
+    motor_right_forward.value = False
+    motor_right_reverse.value = False
 
-  motor_left_forward.value = False
-  motor_left_reverse.value = False
+    motor_left_forward.value = False
+    motor_left_reverse.value = False
+
 
 def test():
-  forward()
-  time.sleep(1)
-  reverse()
-  time.sleep(1)
-  turn_right()
-  time.sleep(1)
-  turn_left()
-  time.sleep(1)
-  stop()
+    forward()
+    time.sleep(1)
+    reverse()
+    time.sleep(1)
+    turn_right()
+    time.sleep(1)
+    turn_left()
+    time.sleep(1)
+    stop()
