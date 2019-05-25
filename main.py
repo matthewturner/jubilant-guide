@@ -4,12 +4,9 @@ import swirl
 import motion
 import led
 import something
-from queue import Queue
+from queue import queue
 
-# motion.test()
-led.on()
-
-queue = Queue()
+i = 0
 
 
 def check_in_front():
@@ -19,9 +16,6 @@ def check_in_front():
     else:
         led.off()
         motion.forward()
-
-
-i = 0
 
 
 def show_swirl():

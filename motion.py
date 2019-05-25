@@ -2,6 +2,7 @@ import board
 import time
 from digitalio import DigitalInOut, Direction, Pull
 from analogio import AnalogOut
+from queue import queue
 
 STOPPED = 0
 FORWARD = 1
@@ -51,8 +52,7 @@ def turn(right, degrees):
     motor_left_forward.value = not right
     motor_left_reverse.value = right
     time_to_turn = 360 / degrees / 4
-    time.sleep(time_to_turn)
-    stop()
+    queue.enqueue(stop, time_to_turn)
 
 
 def turn_right(degrees):

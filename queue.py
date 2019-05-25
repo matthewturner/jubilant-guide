@@ -19,3 +19,5 @@ class Queue:
             if task.repeat:
                 task.reset()
                 self.__tasks.append(task)
+
+queue = Queue()
