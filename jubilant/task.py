@@ -6,6 +6,7 @@ class Task:
         self.__delay = delay
         self.__action = action
         self.__registered = time.monotonic()
+        print(self.__registered)
         self.__repeat = repeat
 
     @property
