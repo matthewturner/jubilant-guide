@@ -10,6 +10,13 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal"
+        },
+        {
+            "name": "World",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/world.py",
+            "console": "integratedTerminal"
         }
     ]
 }

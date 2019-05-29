@@ -1,9 +1,5 @@
 import time
-import jubilant.voltage
-import jubilant.swirl
-import jubilant.motion
-import jubilant.led
-import jubilant.something
+from jubilant import voltage, swirl, motion, led, something
 from jubilant.queue import queue
 
 i = 0
