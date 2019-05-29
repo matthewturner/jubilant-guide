@@ -11,7 +11,8 @@ def check_in_front():
         motion.turn_right(90)
     else:
         led.off()
-        motion.forward()
+        if not motion.is_turning():
+            motion.forward()
 
 
 def show_swirl():

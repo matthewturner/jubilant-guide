@@ -6,12 +6,11 @@ class Task:
         self.__delay = delay
         self.__action = action
         self.__registered = time.monotonic()
-        print(self.__registered)
         self.__repeat = repeat
 
     @property
     def ready(self):
-        return time.monotonic() > self.__registered + self.__delay
+        return time.monotonic() >= self.__registered + self.__delay
 
     @property
     def repeat(self):
