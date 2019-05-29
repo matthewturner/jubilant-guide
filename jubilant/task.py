@@ -10,7 +10,7 @@ class Task:
 
     @property
     def ready(self):
-        return time.monotonic() > self.__registered + self.__delay
+        return time.monotonic() >= self.__registered + self.__delay
 
     @property
     def repeat(self):

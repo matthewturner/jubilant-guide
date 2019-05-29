@@ -1,10 +1,6 @@
 import time
-import voltage
-import swirl
-import motion
-import led
-import something
-from queue import queue
+from jubilant import voltage, swirl, motion, led, something
+from jubilant.queue import queue
 
 i = 0
 
@@ -15,7 +11,8 @@ def check_in_front():
         motion.turn_right(90)
     else:
         led.off()
-        motion.forward()
+        if not motion.is_turning():
+            motion.forward()
 
 
 def show_swirl():
