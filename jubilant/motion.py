@@ -19,7 +19,7 @@ def status():
 
 
 def is_turning():
-    status() == TURNING_LEFT or status() == TURNING_RIGHT
+    return status() == TURNING_LEFT or status() == TURNING_RIGHT
 
 
 def set_status(status):
@@ -55,7 +55,7 @@ def turn(right, degrees):
 
     motor_left_forward.value = not right
     motor_left_reverse.value = right
-    time_to_turn = 360 / degrees / 3.8
+    time_to_turn = 360 / degrees / 4
     queue.enqueue(stop, time_to_turn)
 
 

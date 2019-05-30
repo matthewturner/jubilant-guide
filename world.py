@@ -4,9 +4,11 @@ window = Tk()
 
 window.title("World")
 
-canvas = Canvas(window, width=200, height=100)
-canvas.pack()
+canvas = Canvas(window)
+canvas.pack(fill="both", expand=True)
 
-canvas.create_rectangle(50, 25, 150, 75, fill='blue')
+for i in range(20):
+    canvas.create_rectangle(i*20+5, i*20+5, i*20+25, i*20+25, 
+        fill='gray', outline='black')
 
 window.mainloop()

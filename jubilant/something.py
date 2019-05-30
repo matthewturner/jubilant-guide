@@ -13,7 +13,7 @@ def is_infront():
         if current_distance != last_distance:
             last_distance = current_distance
             print("Distance: % 3d" % (current_distance))
-        return current_distance <= 18
+        return current_distance <= 20
     except RuntimeError:
         print("Retrying!")
         pass
