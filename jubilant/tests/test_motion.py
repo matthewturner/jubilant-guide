@@ -19,5 +19,5 @@ class TestMotion(object):
             queue.work_off()
         end = time.monotonic()
         duration = end - start
-        assert(round(duration, 1) == 1.0)
+        assert(round(duration, 1) == 0.5)
         assert(not motion.is_turning())

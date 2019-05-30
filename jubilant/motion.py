@@ -55,7 +55,7 @@ def turn(right, degrees):
 
     motor_left_forward.value = not right
     motor_left_reverse.value = right
-    time_to_turn = 360 / degrees / 4
+    time_to_turn = 360 / degrees / 8
     queue.enqueue(stop, time_to_turn)
 
 

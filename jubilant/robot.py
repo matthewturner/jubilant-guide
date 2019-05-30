@@ -21,5 +21,5 @@ def show_swirl():
 
 
 def start():
-    queue.enqueue(check_in_front, delay=0.2, repeat=True)
+    queue.enqueue(check_in_front, delay=0.01, repeat=True)
     queue.enqueue(show_swirl, repeat=True)
