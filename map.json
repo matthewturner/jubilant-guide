@@ -144,24 +144,49 @@
                 "type": "solid"
             },
             {
+                "x": 26,
+                "y": 4,
+                "type": "transparent"
+            },
+            {
                 "x": 3,
                 "y": 5,
-                "type": "solid"
+                "type": "transparent"
+            },
+            {
+                "x": 26,
+                "y": 5,
+                "type": "transparent"
             },
             {
                 "x": 3,
                 "y": 6,
-                "type": "solid"
+                "type": "transparent"
+            },
+            {
+                "x": 26,
+                "y": 6,
+                "type": "transparent"
             },
             {
                 "x": 3,
                 "y": 7,
-                "type": "solid"
+                "type": "transparent"
+            },
+            {
+                "x": 26,
+                "y": 7,
+                "type": "transparent"
             },
             {
                 "x": 3,
                 "y": 8,
-                "type": "solid"
+                "type": "transparent"
+            },
+            {
+                "x": 26,
+                "y": 8,
+                "type": "transparent"
             },
             {
                 "x": 3,
@@ -169,9 +194,19 @@
                 "type": "solid"
             },
             {
+                "x": 26,
+                "y": 9,
+                "type": "transparent"
+            },
+            {
                 "x": 3,
                 "y": 10,
                 "type": "solid"
+            },
+            {
+                "x": 26,
+                "y": 10,
+                "type": "transparent"
             },
             {
                 "x": 3,
@@ -179,14 +214,29 @@
                 "type": "solid"
             },
             {
+                "x": 26,
+                "y": 11,
+                "type": "transparent"
+            },
+            {
                 "x": 3,
                 "y": 12,
                 "type": "solid"
             },
             {
+                "x": 26,
+                "y": 12,
+                "type": "transparent"
+            },
+            {
                 "x": 2,
                 "y": 13,
                 "type": "solid"
+            },
+            {
+                "x": 26,
+                "y": 13,
+                "type": "transparent"
             },
             {
                 "x": 0,
@@ -197,6 +247,16 @@
                 "x": 1,
                 "y": 14,
                 "type": "solid"
+            },
+            {
+                "x": 26,
+                "y": 14,
+                "type": "transparent"
+            },
+            {
+                "x": 26,
+                "y": 15,
+                "type": "transparent"
             },
             {
                 "x": 7,

@@ -7,14 +7,17 @@ window = Tk()
 
 window.title("World")
 
+
 def load_map():
     global __map
     __map = __map_repository.find('map')
     canvas.delete("all")
     draw(canvas.winfo_width())
 
+
 def save_map():
     __map_repository.save(__map)
+
 
 button_load = Button(window, text="Load", command=load_map)
 button_load.pack()
@@ -37,31 +40,42 @@ for y in range(DEFAULT_ROOM_HEIGHT):
 
 __square_map = {}
 
+
+def fill_for(type):
+    fills = {
+        Square.OPEN: 'gray',
+        Square.SOLID: 'blue',
+        Square.TRANSPARENT: 'orange'
+    }
+    return fills[type]
+
 def draw(max_width):
     square_size = int((max_width - 10) / __map.width)
     __square_map.clear()
     for square in __map.squares:
-        fill = 'gray' if square.type == Square.OPEN else 'blue'
+        fill = fill_for(square.type)
         rectangle_id = canvas.create_rectangle(square.x * square_size + PADDING,
-                                    square.y * square_size + PADDING,
-                                    square.x * square_size + square_size + PADDING,
-                                    square.y * square_size + square_size + PADDING,
-                                    fill=fill, outline='black', tags='square')
+                                               square.y * square_size + PADDING,
+                                               square.x * square_size + square_size + PADDING,
+                                               square.y * square_size + square_size + PADDING,
+                                               fill=fill, outline='black', tags='square')
         __square_map[rectangle_id] = square
+
 
 def configure(event):
     canvas.delete("all")
     draw(event.width)
 
-def on_square_click(event):                  
+
+def on_square_click(event):
     id = event.widget.find_closest(event.x, event.y)[0]
     square = __square_map[id]
-    square.type = Square.SOLID if __square_map[id].type == Square.OPEN else Square.OPEN
-    fill = 'gray' if square.type == Square.OPEN else 'blue'
+    square.type = square.next_type()
+    fill = fill_for(square.type)
     canvas.itemconfigure(id, fill=fill)
-    
 
-canvas.bind("<Configure>", configure)      
-canvas.tag_bind('square', '<ButtonPress-1>', on_square_click)   
+
+canvas.bind("<Configure>", configure)
+canvas.tag_bind('square', '<ButtonPress-1>', on_square_click)
 
 window.mainloop()

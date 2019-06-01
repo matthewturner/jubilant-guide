@@ -1,10 +1,12 @@
 class Square:
     OPEN = 0
     SOLID = 1
+    TRANSPARENT = 2
 
     TYPE_NAMES = {
         OPEN: 'open',
-        SOLID: 'solid'
+        SOLID: 'solid',
+        TRANSPARENT: 'transparent'
     }
 
     def __init__(self, x, y, type=None, type_name=None):
@@ -40,3 +42,6 @@ class Square:
             if name == type_name:
                 return id
         return None
+
+    def next_type(self):
+        return (self.__type + 1) % len(Square.TYPE_NAMES.keys())
