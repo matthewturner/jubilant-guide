@@ -2,6 +2,10 @@ from tkinter import *
 from jubilant.square import Square
 from jubilant.map import Map
 from jubilant.map_repository import MapRepository
+import _thread as thread
+from jubilant.queue import queue
+from jubilant import robot
+import time
 
 window = Tk()
 
@@ -18,12 +22,24 @@ def load_map():
 def save_map():
     __map_repository.save(__map)
 
+frame_left = Frame(window)
+frame_left.pack(side=LEFT, ipadx=10, ipady=10)
 
-button_load = Button(window, text="Load", command=load_map)
+button_load = Button(frame_left, text="Load", command=load_map)
 button_load.pack()
 
-button_save = Button(window, text="Save", command=save_map)
+button_save = Button(frame_left, text="Save", command=save_map)
 button_save.pack()
+
+
+def start():
+    thread.start_new_thread(start_robot)
+
+frame_right = Frame(window)
+frame_right.pack(side=RIGHT, ipadx=10, ipady=10)
+
+button_start = Button(frame_right, text="Start", command=start)
+button_start.pack()
 
 canvas = Canvas(window)
 canvas.pack(fill="both", expand=True)
@@ -49,6 +65,7 @@ def fill_for(type):
     }
     return fills[type]
 
+
 def draw(max_width):
     square_size = int((max_width - 10) / __map.width)
     __square_map.clear()
@@ -73,6 +90,13 @@ def on_square_click(event):
     square.type = square.next_type()
     fill = fill_for(square.type)
     canvas.itemconfigure(id, fill=fill)
+
+
+def start_robot():
+    robot.start()
+
+    while True:
+        queue.work_off()
 
 
 canvas.bind("<Configure>", configure)
