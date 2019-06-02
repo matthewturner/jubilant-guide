@@ -1,5 +1,4 @@
-from jubilant.queue import queue
-from jubilant import robot
+from jubilant import queue, robot
 
 robot.start()
 

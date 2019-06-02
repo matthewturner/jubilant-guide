@@ -1,5 +1,4 @@
-from jubilant import voltage, swirl, motion, led, something
-from jubilant.queue import queue
+from jubilant import voltage, swirl, motion, led, something, queue
 
 i = 0
 

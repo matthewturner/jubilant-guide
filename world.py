@@ -1,1 +1,4 @@
-import world
+from world import Window
+
+window = Window()
+window.show()
