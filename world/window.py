@@ -1,6 +1,7 @@
 from tkinter import *
 import _thread as thread
 import time
+from queue import Queue, Empty
 from jubilant import robot, Square, Map, MapRepository, queue
 
 
@@ -46,9 +47,22 @@ class Window:
                 self.__map.append(Square(x, y, type=Square.OPEN))
 
         self.__square_map = {}
+        self.__invoke_queue = Queue()
+        self.__window.after(100, self.__process_queue)
 
     def show(self):
         self.__window.mainloop()
+
+    def __process_queue(self):
+        try:
+            callable, args = self.__invoke_queue.get_nowait()
+            callable(args)
+        except Empty:
+            pass
+        self.__window.after(100, self.__process_queue)
+
+    def __callback(self, args):
+        print(args)
 
     def __load_map(self):
         self.__map = self.__map_repository.find('map')
@@ -94,6 +108,7 @@ class Window:
 
     def __start_robot(self):
         robot.start()
+        self.__invoke_queue.put((self.__callback, 'Started'))
 
         while True:
             queue.work_off()
