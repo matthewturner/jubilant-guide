@@ -3,6 +3,7 @@ import _thread as thread
 import time
 from queue import Queue, Empty
 from jubilant import robot, Square, Map, MapRepository, queue
+from digitalio import DigitalInOut
 
 
 class Window:
@@ -33,6 +34,10 @@ class Window:
             self.__frame_right, text="Start", command=self.__start)
         self.__button_start.pack()
 
+        self.__pins = {}
+        for pin in range(14):
+            self.__registerPin(pin)
+
         self.__canvas = Canvas(self.__window)
         self.__canvas.pack(fill="both", expand=True)
 
@@ -53,13 +58,18 @@ class Window:
     def show(self):
         self.__window.mainloop()
 
+    def __registerPin(self, pin):
+        label_pin = Label(self.__frame_right, text="D%d" % pin)
+        label_pin.pack(side=LEFT)
+        self.__pins[pin] = label_pin
+
     def __process_queue(self):
         try:
             callable, args = self.__invoke_queue.get_nowait()
             callable(args)
         except Empty:
             pass
-        self.__window.after(100, self.__process_queue)
+        self.__window.after(10, self.__process_queue)
 
     def __callback(self, args):
         print(args)
@@ -108,7 +118,20 @@ class Window:
 
     def __start_robot(self):
         robot.start()
-        self.__invoke_queue.put((self.__callback, 'Started'))
+        for pin in DigitalInOut.Instances:
+            pin.listener = self.__pin_listener
 
         while True:
             queue.work_off()
+
+    def __pin_listener(self, args=None):
+        if args.invoke_required:
+            args.invoke_required = False
+            self.__invoke_queue.put((self.__pin_listener, args))
+        else:
+            label_pin = self.__pins[args.pin]
+            if args.value:
+                label_pin.configure(background='red')
+            else:
+                label_pin.configure(background='gray')
+
