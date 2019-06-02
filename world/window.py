@@ -65,8 +65,9 @@ class Window:
 
     def __process_queue(self):
         try:
-            callable, args = self.__invoke_queue.get_nowait()
-            callable(args)
+            for _ in range(5):
+                callable, args = self.__invoke_queue.get_nowait()
+                callable(args)
         except Empty:
             pass
         self.__window.after(10, self.__process_queue)

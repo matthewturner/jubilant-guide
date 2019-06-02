@@ -1,13 +1,15 @@
 import board
 from digitalio import DigitalInOut, Direction, Pull
 
-led = DigitalInOut(board.D13)
-led.direction = Direction.OUTPUT
+class Led:
+    def __init__(self):
+        self.__pin = DigitalInOut(board.D13)
+        self.__pin.direction = Direction.OUTPUT
 
 
-def on():
-    led.value = True
+    def on(self):
+        self.__pin.value = True
 
 
-def off():
-    led.value = False
+    def off(self):
+        self.__pin.value = False

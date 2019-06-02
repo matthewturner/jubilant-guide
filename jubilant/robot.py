@@ -1,7 +1,9 @@
-from jubilant import voltage, swirl, motion, led, something, queue
+from jubilant import voltage, swirl, Led, something, queue, WheelDriver
 
 i = 0
 
+motion = WheelDriver()
+led = Led()
 
 def check_in_front():
     if something.is_infront():
