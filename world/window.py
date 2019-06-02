@@ -1,5 +1,5 @@
 from tkinter import *
-import _thread as thread
+import threading
 import time
 import board
 from queue import Queue, Empty
@@ -58,7 +58,7 @@ class Window:
             'square', '<ButtonPress-1>', self.__on_square_click)
 
         self.__map_repository = MapRepository()
-        self.__map = Map('map')
+        self.__map = Map('map', square_size_cm=10)
         for y in range(Window.DEFAULT_ROOM_HEIGHT):
             for x in range(Window.DEFAULT_ROOM_WIDTH):
                 self.__map.append(Square(x, y, type=Square.OPEN))
@@ -68,6 +68,10 @@ class Window:
         self.__window.after(100, self.__process_queue)
 
         self.__robot = Robot()
+        self.__robot.body.x = 100
+        self.__robot.body.y = 60
+        self.__robot_last_position = None
+        self.__locate_robot()
 
     def show(self):
         self.__window.mainloop()
@@ -98,7 +102,8 @@ class Window:
         self.__map_repository.save(__map)
 
     def __start(self):
-        thread.start_new_thread(self.__start_robot)
+        self.__worker_thread = threading.Thread(target=self.__start_robot)
+        self.__worker_thread.start()
 
     def __fill_for(self, type):
         fills = {
@@ -166,9 +171,12 @@ class Window:
         while True:
             queue.work_off()
 
+    @property
+    def __invoke_required(self):
+        return threading.current_thread() == self.__worker_thread
+
     def __pin_listener(self, args=None):
-        if args.invoke_required:
-            args.invoke_required = False
+        if self.__invoke_required:
             self.__invoke_queue.put((self.__pin_listener, args))
         else:
             label_pin = self.__pins[args.pin]
@@ -178,6 +186,7 @@ class Window:
                 label_pin.configure(background='gray')
             if args.pin == board.D9 and args.value:
                 self.__show_sonar()
+            self.__locate_robot()
 
     def __show_sonar(self):
         self.__canvas_robot.itemconfigure(
@@ -187,3 +196,18 @@ class Window:
     def __stop_sonar(self):
         self.__canvas_robot.itemconfigure(
             self.__robot_sonar_id, fill='gray')
+
+    def __locate_robot(self):
+        self.__robot.update()
+        square = self.__map.locate(self.__robot.body.x, self.__robot.body.y)
+
+        if self.__robot_last_position:
+            self.__canvas.itemconfigure(self.__robot_last_position, fill='gray')
+        self.__robot_last_position = self.__find_square(square)
+        self.__canvas.itemconfigure(self.__robot_last_position, fill='pink')
+
+    def __find_square(self, square):
+        for key, value in self.__square_map.items():
+            if value == square:
+                return key
+        return None

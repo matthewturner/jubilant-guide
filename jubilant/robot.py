@@ -1,32 +1,55 @@
-from jubilant import Swirl, Led, Vision, queue, WheelDriver, CollisionWarning
+from jubilant import Swirl, Led, Vision, \
+    queue, WheelDriver, CollisionWarning, \
+    Body
 
 
 class Robot:
     def __init__(self):
         self.__motion = WheelDriver()
         self.__led = Led()
-        self.__something = Vision()
+        self.__vision = Vision()
         self.__swirl = Swirl()
+        self.__body = Body()
+        self.__motion.listener = self.__body
 
-    def __check_in_front(self):
+    @property
+    def motion(self):
+        return self.__motion
+
+    @property
+    def vision(self):
+        return self.__vision
+
+    @property
+    def body(self):
+        return self.__body
+
+    def update(self):
+        self.__body.update(self.__motion)
+
+    def __move(self):
+        something = self.__vision
+        motion = self.__motion
+        led = self.__led
+
         try:
-            if not self.__motion.is_turning():
-                if self.__something.is_straight_infront():
-                    self.__led.off()
-                    self.__motion.forward()
+            if not motion.is_manoevring():
+                if something.is_straight_infront():
+                    led.off()
+                    motion.forward()
                 else:
-                    self.__led.off()
-                    if self.__something.is_closer_to_left():
-                        self.__motion.bear_right()
+                    led.off()
+                    if something.is_closer_to_left():
+                        motion.bear_right()
                     else:
-                        self.__motion.bear_left()
+                        motion.bear_left()
         except CollisionWarning:
-            self.__led.on()
-            if self.__something.is_closer_to_left():
-                self.__motion.turn_right(90)
+            led.on()
+            if something.is_closer_to_left():
+                motion.turn_right(90)
             else:
-                self.__motion.turn_left(90)
+                motion.turn_left(90)
 
     def start(self):
-        queue.enqueue(self.__check_in_front, delay=0.01, repeat=True)
+        queue.enqueue(self.__move, delay=0.01, repeat=True)
         queue.enqueue(self.__swirl.next, repeat=True)

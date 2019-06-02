@@ -19,7 +19,7 @@ class DigitalInOut:
         self.__value = value
         if self.__listener:
             self.__listener(SimpleNamespace(
-                pin=self.__pin, value=self.__value, invoke_required=True))
+                pin=self.__pin, value=self.__value))
 
     @property
     def pin(self):

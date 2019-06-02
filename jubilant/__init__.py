@@ -8,4 +8,5 @@ from .led import Led
 from .collision_warning import CollisionWarning
 from .vision import Vision
 from .wheel_driver import WheelDriver
+from .body import Body
 from .robot import Robot

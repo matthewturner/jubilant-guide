@@ -21,12 +21,29 @@ class WheelDriver:
 
         self.__speed = AnalogOut(board.A0)
         self.__speed.value = 55000
+        self.__listener = None
 
     @property
     def status(self):
         return self.__status
 
-    def is_turning(self):
+    @property
+    def left_wheel(self):
+        return self.__left_wheel
+
+    @property
+    def right_wheel(self):
+        return self.__right_wheel
+
+    @property
+    def listener(self):
+        return self.__listener
+    
+    @listener.setter
+    def listener(self, listener):
+        self.__listener = listener
+
+    def is_manoevring(self):
         return self.status == WheelDriver.TURNING_LEFT \
             or self.status == WheelDriver.TURNING_RIGHT \
             or self.status == WheelDriver.BEARING_RIGHT \
@@ -35,6 +52,7 @@ class WheelDriver:
     @status.setter
     def status(self, status):
         self.__status = status
+        if self.__listener: self.__listener.on_status_changed(self.__status)
 
     def __time_to_turn(self, degrees):
         return (360 / degrees / 8)

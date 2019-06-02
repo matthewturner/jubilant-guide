@@ -2,12 +2,21 @@ import board
 from .eye import Eye
 from .collision_warning import CollisionWarning
 
+
 class Vision:
     INFINITY = 99999
 
     def __init__(self):
         self.__left_eye = Eye(board.D9, board.D8, name='left')
         self.__right_eye = Eye(board.D10, board.D8, name='right')
+
+    @property
+    def left_eye(self):
+        return self.__left_eye
+
+    @property
+    def right_eye(self):
+        return self.__right_eye
 
     def is_straight_infront(self):
         distance_from_left_eye = self.__distance_from(self.__left_eye)
