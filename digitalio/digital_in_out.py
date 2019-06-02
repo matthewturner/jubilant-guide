@@ -1,5 +1,6 @@
 from types import SimpleNamespace
 
+
 class DigitalInOut:
     Instances = []
 
@@ -8,17 +9,18 @@ class DigitalInOut:
         self.__value = False
         self.__listener = None
         DigitalInOut.Instances.append(self)
-    
+
     @property
     def value(self):
         return self.__value
-    
+
     @value.setter
     def value(self, value):
         self.__value = value
         if self.__listener:
-            self.__listener(SimpleNamespace(pin=self.__pin, value=self.__value, invoke_required=True))
-    
+            self.__listener(SimpleNamespace(
+                pin=self.__pin, value=self.__value, invoke_required=True))
+
     @property
     def pin(self):
         return self.__pin

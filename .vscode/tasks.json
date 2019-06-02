@@ -4,7 +4,7 @@
         {
             "label": "Deploy",
             "type": "shell",
-            "command": "xcopy /v /d /y /u main.py d:\\; xcopy /v /d /y /u jubilant\\*.py d:\\jubilant",
+            "command": "xcopy /v /d /y main.py d:\\; xcopy /v /d /y jubilant\\*.py d:\\jubilant",
             "group": {
                 "kind": "build",
                 "isDefault": true
