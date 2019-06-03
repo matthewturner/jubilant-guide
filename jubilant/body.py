@@ -10,6 +10,7 @@ class Body:
         self.__heading = 0
         self.__last_status = WheelDriver.STOPPED
         self.__last_status_changed = time.monotonic()
+        self.__time_scale = 1
 
     @property
     def x(self):
@@ -26,6 +27,14 @@ class Body:
     @y.setter
     def y(self, y):
         self.__y = y
+
+    @property
+    def time_scale(self):
+        return self.__time_scale
+
+    @time_scale.setter
+    def time_scale(self, time_scale):
+        self.__time_scale = time_scale
 
     @property
     def speed(self):
@@ -57,16 +66,16 @@ class Body:
         duration = current_time - last_status_changed
 
         if last_status == WheelDriver.FORWARD:
-            self.__y = self.__y + int(duration /1000 * self.__speed)
+            self.__y = self.__y + (duration / 1000 * self.__time_scale * self.__speed)
             return
 
         if last_status == WheelDriver.REVERSING:
-            self.__y = self.__y - duration / 1000 * self.__speed
+            self.__y = self.__y - (duration / 1000 * self.__time_scale * self.__speed)
             return
     
     def update(self, wheel_driver):
         duration = time.monotonic() - self.__last_status_changed
 
         if wheel_driver.status == WheelDriver.FORWARD:
-            self.__y = self.__y + duration / 1000 * self.__speed
+            self.__y = self.__y + (duration / 1000 * self.__time_scale * self.__speed)
             return

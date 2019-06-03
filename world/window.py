@@ -65,11 +65,12 @@ class Window:
 
         self.__square_map = {}
         self.__invoke_queue = Queue()
-        self.__window.after(100, self.__process_queue)
+        self.__window.after(50, self.__process_queue)
 
         self.__robot = Robot()
         self.__robot.body.x = 100
         self.__robot.body.y = 60
+        self.__robot.body.time_scale = 10
         self.__robot_last_position = None
         self.__locate_robot()
 
