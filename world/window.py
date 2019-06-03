@@ -3,15 +3,12 @@ import threading
 import time
 import board
 from queue import Queue, Empty
-from jubilant import Robot, Square, Map, MapRepository, queue
+from jubilant import Robot, Square, queue
 from digitalio import DigitalInOut
+from world import MapCanvasManager, RobotCanvasManager
 
 
 class Window:
-    DEFAULT_ROOM_HEIGHT = 20
-    DEFAULT_ROOM_WIDTH = 40
-    PADDING = 5
-
     def __init__(self):
         self.__window = Tk()
 
@@ -48,31 +45,21 @@ class Window:
 
         self.__canvas_robot = Canvas(self.__frame_right_middle, width=100)
         self.__canvas_robot.pack()
-        self.__draw_robot()
-
-        self.__canvas = Canvas(self.__window)
-        self.__canvas.pack(fill="both", expand=True)
-
-        self.__canvas.bind("<Configure>", self.__configure)
-        self.__canvas.tag_bind(
-            'square', '<ButtonPress-1>', self.__on_square_click)
-
-        self.__map_repository = MapRepository()
-        self.__map = Map('map', square_size_cm=10)
-        for y in range(Window.DEFAULT_ROOM_HEIGHT):
-            for x in range(Window.DEFAULT_ROOM_WIDTH):
-                self.__map.append(Square(x, y, type=Square.OPEN))
-
-        self.__square_map = {}
-        self.__invoke_queue = Queue()
-        self.__window.after(50, self.__process_queue)
+        self.__robot_canvas_manager = RobotCanvasManager(self.__canvas_robot)
+        self.__robot_canvas_manager.draw()
 
         self.__robot = Robot()
         self.__robot.body.x = 100
         self.__robot.body.y = 60
         self.__robot.body.time_scale = 10
-        self.__robot_last_position = None
-        self.__locate_robot()
+
+        self.__canvas = Canvas(self.__window)
+        self.__canvas.pack(fill="both", expand=True)
+        self.__map_canvas_manager = MapCanvasManager(self.__canvas)
+        self.__map_canvas_manager.locate(self.__robot)
+
+        self.__invoke_queue = Queue()
+        self.__window.after(50, self.__process_queue)
 
     def show(self):
         self.__window.mainloop()
@@ -89,80 +76,20 @@ class Window:
                 callable(args)
         except Empty:
             pass
-        self.__window.after(10, self.__process_queue)
+        self.__window.after(50, self.__process_queue)
 
     def __callback(self, args):
         print(args)
 
     def __load_map(self):
-        self.__map = self.__map_repository.find('map')
-        self.__canvas.delete("all")
-        self.__draw(self.__canvas.winfo_width())
+        self.__map_canvas_manager.load_map()
 
     def __save_map(self):
-        self.__map_repository.save(__map)
+        self.__map_canvas_manager.save_map()
 
     def __start(self):
         self.__worker_thread = threading.Thread(target=self.__start_robot)
         self.__worker_thread.start()
-
-    def __fill_for(self, type):
-        fills = {
-            Square.OPEN: 'gray',
-            Square.SOLID: 'blue',
-            Square.TRANSPARENT: 'orange'
-        }
-        return fills[type]
-
-    def __draw(self, max_width):
-        square_size = int((max_width - 10) / self.__map.width)
-        self.__square_map.clear()
-        for square in self.__map.squares:
-            fill = self.__fill_for(square.type)
-            rectangle_id = self.__canvas.create_rectangle(square.x * square_size + Window.PADDING,
-                                                          square.y * square_size + Window.PADDING,
-                                                          square.x * square_size + square_size + Window.PADDING,
-                                                          square.y * square_size + square_size + Window.PADDING,
-                                                          fill=fill, outline='black', tags='square')
-            self.__square_map[rectangle_id] = square
-
-    def __draw_robot(self):
-        canvas = self.__canvas_robot
-        self.__robot_sonar_id = \
-            canvas.create_rectangle(20 + Window.PADDING,
-                                    Window.PADDING,
-                                    20 + 60 + Window.PADDING,
-                                    10 + Window.PADDING,
-                                    fill='gray', outline='black', tags='square')
-        self.__robot_left_wheel_id = \
-            canvas.create_rectangle(Window.PADDING,
-                                    20 + Window.PADDING,
-                                    20 + Window.PADDING,
-                                    20 + 40 + Window.PADDING,
-                                    fill='black', outline='black', tags='square')
-        self.__robot_rectangle_id = \
-            canvas.create_rectangle(20 + Window.PADDING,
-                                    20 + 10 + Window.PADDING,
-                                    20 + 60 + Window.PADDING,
-                                    20 + 10 + 80 + Window.PADDING,
-                                    fill='gray', outline='black', tags='square')
-        self.__robot_right_wheel_id = \
-            canvas.create_rectangle(20 + 60 + Window.PADDING,
-                                    20 + Window.PADDING,
-                                    20 + 60 + 20 + Window.PADDING,
-                                    20 + 40 + Window.PADDING,
-                                    fill='black', outline='black', tags='square')
-
-    def __configure(self, event):
-        self.__canvas.delete("all")
-        self.__draw(event.width)
-
-    def __on_square_click(self, event):
-        id = event.widget.find_closest(event.x, event.y)[0]
-        square = self.__square_map[id]
-        square.type = square.next_type()
-        fill = self.__fill_for(square.type)
-        self.__canvas.itemconfigure(id, fill=fill)
 
     def __start_robot(self):
         self.__robot.start()
@@ -186,29 +113,5 @@ class Window:
             else:
                 label_pin.configure(background='gray')
             if args.pin == board.D9 and args.value:
-                self.__show_sonar()
-            self.__locate_robot()
-
-    def __show_sonar(self):
-        self.__canvas_robot.itemconfigure(
-            self.__robot_sonar_id, fill='white')
-        self.__window.after(300, self.__stop_sonar)
-
-    def __stop_sonar(self):
-        self.__canvas_robot.itemconfigure(
-            self.__robot_sonar_id, fill='gray')
-
-    def __locate_robot(self):
-        self.__robot.update()
-        square = self.__map.locate(self.__robot.body.x, self.__robot.body.y)
-
-        if self.__robot_last_position:
-            self.__canvas.itemconfigure(self.__robot_last_position, fill='gray')
-        self.__robot_last_position = self.__find_square(square)
-        self.__canvas.itemconfigure(self.__robot_last_position, fill='pink')
-
-    def __find_square(self, square):
-        for key, value in self.__square_map.items():
-            if value == square:
-                return key
-        return None
+                self.__robot_canvas_manager.show_sonar()
+            self.__map_canvas_manager.locate(self.__robot)
