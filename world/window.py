@@ -106,12 +106,13 @@ class Window:
     def __pin_listener(self, args=None):
         if self.__invoke_required:
             self.__invoke_queue.put((self.__pin_listener, args))
+            return
+        
+        label_pin = self.__pins[args.pin]
+        if args.value:
+            label_pin.configure(background='red')
         else:
-            label_pin = self.__pins[args.pin]
-            if args.value:
-                label_pin.configure(background='red')
-            else:
-                label_pin.configure(background='gray')
-            if args.pin == board.D9 and args.value:
-                self.__robot_canvas_manager.show_sonar()
-            self.__map_canvas_manager.locate(self.__robot)
+            label_pin.configure(background='gray')
+        if args.pin == board.D9 and args.value:
+            self.__robot_canvas_manager.show_sonar()
+        self.__map_canvas_manager.locate(self.__robot)
