@@ -72,4 +72,4 @@ class MapCanvasManager:
         self.__draw(self.__canvas.winfo_width())
 
     def save_map(self):
-        self.__map_repository.save(__map)
+        self.__map_repository.save(self.__map)
