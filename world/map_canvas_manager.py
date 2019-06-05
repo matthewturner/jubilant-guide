@@ -1,4 +1,5 @@
 from jubilant import Square, Map, MapRepository
+import numpy as np
 
 
 class MapCanvasManager:
@@ -60,6 +61,26 @@ class MapCanvasManager:
                 self.__robot_last_position, fill='gray')
         self.__robot_last_position = self.__find_square(square)
         self.__canvas.itemconfigure(self.__robot_last_position, fill='pink')
+        self.__distance_from_obstacle(robot)
+    
+    def __distance_from_obstacle(self, robot):
+        for square in self.__map.interesting_squares():
+            points = square.points()
+            angle = self.__angle(points[0], [robot.body.x, robot.body.y], points[1])
+            print(angle)
+
+    def __angle(self, p0, p1=np.array([0,0]), p2=None):
+        ''' compute angle (in degrees) for p0p1p2 corner
+        Inputs:
+            p0,p1,p2 - points in the form of [x,y]
+        '''
+        if p2 is None:
+            p2 = p1 + np.array([1, 0])
+        v0 = np.array(p0) - np.array(p1)
+        v1 = np.array(p2) - np.array(p1)
+
+        angle = np.math.atan2(np.linalg.det([v0,v1]),np.dot(v0,v1))
+        return np.degrees(angle)
 
     def __find_square(self, square):
         for key, value in self.__square_map.items():

@@ -17,6 +17,14 @@ class Square:
         if type_name:
             self.__type = self.type_from_name(type_name)
 
+    def points(self):
+        return [
+            [self.__x, self.__y], 
+            [self.__x + 10, self.__y]#,
+            #[self.__x + 10, self.__y + 10], 
+            #[self.__x, self.__y + 10]
+        ]
+
     @property
     def type_name(self):
         return Square.TYPE_NAMES[self.__type]
