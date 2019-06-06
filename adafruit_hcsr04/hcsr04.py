@@ -14,5 +14,6 @@ class HCSR04:
         self.__pin_out.value = False
         return self.__distance
 
-    def set_distance(self, distance):
+    @distance.setter
+    def distance(self, distance):
         self.__distance = distance

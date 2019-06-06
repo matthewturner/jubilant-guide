@@ -5,6 +5,7 @@ from digitalio import DigitalInOut
 class PinManager:
     def __init__(self, container):
         self.__container = container
+        self.__pin_listener = None
         self.__pins = {}
 
         for pin in range(14):

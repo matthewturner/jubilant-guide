@@ -6,6 +6,7 @@ class MapCanvasManager:
     PADDING = 5
     DEFAULT_ROOM_HEIGHT = 20
     DEFAULT_ROOM_WIDTH = 40
+    SQUARE_SIZE = 10
 
     def __init__(self, canvas):
         self.__square_map = {}
@@ -16,7 +17,7 @@ class MapCanvasManager:
         self.__robot_last_position = None
 
         self.__map_repository = MapRepository()
-        self.__map = Map('map', square_size_cm=10)
+        self.__map = Map('map', square_size_cm=MapCanvasManager.SQUARE_SIZE)
         for y in range(MapCanvasManager.DEFAULT_ROOM_HEIGHT):
             for x in range(MapCanvasManager.DEFAULT_ROOM_WIDTH):
                 self.__map.append(Square(x, y, type=Square.OPEN))
@@ -65,9 +66,20 @@ class MapCanvasManager:
     
     def __distance_from_obstacle(self, robot):
         for square in self.__map.interesting_squares():
-            points = square.points()
-            angle = self.__angle(points[0], [robot.body.x, robot.body.y], points[1])
-            print(angle)
+            angles = []
+            for point in square.points():
+                print([robot.body.x, robot.body.y + 1])
+                print([robot.body.x, robot.body.y])
+                scaled_point = [point[0] * MapCanvasManager.SQUARE_SIZE, point[1] * MapCanvasManager.SQUARE_SIZE]
+                print(scaled_point)
+                angle = self.__angle([robot.body.x, robot.body.y + 1], [robot.body.x, robot.body.y], scaled_point)
+                print(angle)
+                angles.append(angle)
+        
+            if len(angles) > 0:
+                if (angles[0] <= robot.body.heading <= angles[1]) or (angles[0] >= robot.body.heading >= angles[1]):
+                    print('This is my square!')
+                    #robot.vision.left_eye.sensor.distance = distance
 
     def __angle(self, p0, p1=np.array([0,0]), p2=None):
         ''' compute angle (in degrees) for p0p1p2 corner
@@ -79,7 +91,7 @@ class MapCanvasManager:
         v0 = np.array(p0) - np.array(p1)
         v1 = np.array(p2) - np.array(p1)
 
-        angle = np.math.atan2(np.linalg.det([v0,v1]),np.dot(v0,v1))
+        angle = np.math.atan2(np.linalg.det([v0,v1]), np.dot(v0, v1))
         return np.degrees(angle)
 
     def __find_square(self, square):

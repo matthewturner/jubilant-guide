@@ -34,7 +34,7 @@ class Window(WorkerWindow):
             self.__frame_right_top, text="Start", command=partial(self._start, self.__start_robot))
         self.__button_start.pack()
         self.__button_ping = tk.Button(
-            self.__frame_right_top, text="Ping", command=partial(self._start, self.__ping))
+            self.__frame_right_top, text="Ping", command=self.__ping)
         self.__button_ping.pack()
 
         self.__canvas_robot = tk.Canvas(self.__frame_right_middle, width=100)
@@ -68,7 +68,10 @@ class Window(WorkerWindow):
             queue.work_off()
 
     def __ping(self):
+        self.__pin_manager.listener = None
         print(self.__robot.vision.right_eye.distance)
+        self.__map_canvas_manager.locate(self.__robot)
+        self.__pin_manager.listener = self.__pin_listener
 
     def __pin_listener(self, args=None):
         if self._invoke_required:

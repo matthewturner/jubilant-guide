@@ -19,8 +19,8 @@ class Square:
 
     def points(self):
         return [
-            [self.__x, self.__y], 
-            [self.__x + 10, self.__y]#,
+            [self.__x, self.__y],
+            [self.__x + 1, self.__y]#,
             #[self.__x + 10, self.__y + 10], 
             #[self.__x, self.__y + 10]
         ]

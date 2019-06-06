@@ -4,17 +4,7 @@
         "height": 20,
         "squares": [
             {
-                "x": 7,
-                "y": 17,
-                "type": "solid"
-            },
-            {
                 "x": 10,
-                "y": 17,
-                "type": "solid"
-            },
-            {
-                "x": 13,
                 "y": 17,
                 "type": "solid"
             }
