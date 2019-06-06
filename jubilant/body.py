@@ -30,7 +30,7 @@ class Body:
 
 
     def coordinate(self, translation_vector=[0, 0]):
-        return [self.x + translation_vector[0], self.y + translation_vector[0]]
+        return [self.x + translation_vector[0], self.y + translation_vector[1]]
 
     @property
     def time_scale(self):
