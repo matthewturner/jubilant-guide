@@ -17,10 +17,10 @@ class Square:
         if type_name:
             self.__type = self.type_from_name(type_name)
 
-    def points(self):
+    def points(self, scale=1):
         return [
-            [self.__x, self.__y],
-            [self.__x + 1, self.__y]#,
+            [self.__x * scale, self.__y * scale],
+            [(self.__x + 1) * scale, self.__y * scale]#,
             #[self.__x + 10, self.__y + 10], 
             #[self.__x, self.__y + 10]
         ]

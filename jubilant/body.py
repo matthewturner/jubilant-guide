@@ -28,6 +28,10 @@ class Body:
     def y(self, y):
         self.__y = y
 
+
+    def coordinate(self, translation_vector=[0, 0]):
+        return [self.x + translation_vector[0], self.y + translation_vector[0]]
+
     @property
     def time_scale(self):
         return self.__time_scale

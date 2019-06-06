@@ -1,5 +1,6 @@
 from jubilant import Square, Map, MapRepository
 import numpy as np
+import math
 
 
 class MapCanvasManager:
@@ -67,19 +68,21 @@ class MapCanvasManager:
     def __distance_from_obstacle(self, robot):
         for square in self.__map.interesting_squares():
             angles = []
-            for point in square.points():
-                print([robot.body.x, robot.body.y + 1])
-                print([robot.body.x, robot.body.y])
-                scaled_point = [point[0] * MapCanvasManager.SQUARE_SIZE, point[1] * MapCanvasManager.SQUARE_SIZE]
-                print(scaled_point)
-                angle = self.__angle([robot.body.x, robot.body.y + 1], [robot.body.x, robot.body.y], scaled_point)
-                print(angle)
+            points = square.points(MapCanvasManager.SQUARE_SIZE)
+            for point in points:
+                north = robot.body.coordinate([0, 1])
+                angle = self.__angle(north, robot.body.coordinate(), point)
                 angles.append(angle)
         
             if len(angles) > 0:
                 if (angles[0] <= robot.body.heading <= angles[1]) or (angles[0] >= robot.body.heading >= angles[1]):
                     print('This is my square!')
-                    #robot.vision.left_eye.sensor.distance = distance
+                    point = points[0]
+                    distance_between = math.hypot(robot.body.x - point[0], robot.body.y - point[1])
+                    print(distance_between)
+                    robot.vision.left_eye.sensor.distance = distance_between
+                    robot.vision.right_eye.sensor.distance = distance_between
+                    return
 
     def __angle(self, p0, p1=np.array([0,0]), p2=None):
         ''' compute angle (in degrees) for p0p1p2 corner
