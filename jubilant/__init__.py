@@ -1,4 +1,5 @@
 from .queue import Queue, queue
+from .point import Point
 from .swirl import Swirl
 from .square import Square
 from .map import Map

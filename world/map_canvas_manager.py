@@ -1,4 +1,4 @@
-from jubilant import Square, Map, MapRepository
+from jubilant import Square, Map, MapRepository, Point
 import numpy as np
 import math
 
@@ -21,7 +21,7 @@ class MapCanvasManager:
         self.__map = Map('map', square_size_cm=MapCanvasManager.SQUARE_SIZE)
         for y in range(MapCanvasManager.DEFAULT_ROOM_HEIGHT):
             for x in range(MapCanvasManager.DEFAULT_ROOM_WIDTH):
-                self.__map.append(Square(x, y, type=Square.OPEN))
+                self.__map.append(Square(Point(x, y), type=Square.OPEN))
 
     def __configure(self, event):
         self.__draw(event.width)
@@ -56,7 +56,7 @@ class MapCanvasManager:
 
     def locate(self, robot):
         robot.update()
-        square = self.__map.locate(robot.body.x, robot.body.y)
+        square = self.__map.locate(robot.body.point.x, robot.body.point.y)
 
         if self.__robot_last_position:
             self.__canvas.itemconfigure(
@@ -68,33 +68,31 @@ class MapCanvasManager:
     def __distance_from_obstacle(self, robot):
         for square in self.__map.interesting_squares():
             angles = []
-            points = square.points(MapCanvasManager.SQUARE_SIZE)
+            points = square.points()
             for point in points:
-                north = robot.body.coordinate([0, 1])
-                angle = self.__angle(north, robot.body.coordinate(), point)
+                north = robot.body.point.move(Point(0, 1)).scale(MapCanvasManager.SQUARE_SIZE)
+                angle = self.__angle(north, robot.body.point, point)
                 angles.append(angle)
         
             if len(angles) > 0:
                 if (angles[0] <= robot.body.heading <= angles[1]) or (angles[0] >= robot.body.heading >= angles[1]):
                     print('This is my square!')
                     point = points[0]
-                    distance_between = math.hypot(robot.body.x - point[0], robot.body.y - point[1])
+                    distance_between = robot.body.point.distance_from(point)
                     print(distance_between)
                     robot.vision.left_eye.sensor.distance = distance_between
                     robot.vision.right_eye.sensor.distance = distance_between
                     return
 
-    def __angle(self, p0, p1=np.array([0,0]), p2=None):
+    def __angle(self, p0, p1, p2):
         ''' compute angle (in degrees) for p0p1p2 corner
         Inputs:
             p0,p1,p2 - points in the form of [x,y]
         '''
-        if p2 is None:
-            p2 = p1 + np.array([1, 0])
-        v0 = np.array(p0) - np.array(p1)
-        v1 = np.array(p2) - np.array(p1)
+        v0 = np.array(p0.array()) - np.array(p1.array())
+        v1 = np.array(p2.array()) - np.array(p1.array())
 
-        angle = np.math.atan2(np.linalg.det([v0,v1]), np.dot(v0, v1))
+        angle = np.math.atan2(np.linalg.det([v0, v1]), np.dot(v0, v1))
         return np.degrees(angle)
 
     def __find_square(self, square):

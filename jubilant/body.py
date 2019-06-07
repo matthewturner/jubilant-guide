@@ -1,11 +1,10 @@
-from jubilant import WheelDriver
+from jubilant import WheelDriver, Point
 import time
 
 
 class Body:
     def __init__(self):
-        self.__x = 0
-        self.__y = 0
+        self.__point = Point(0, 0)
         self.__speed = 0
         self.__heading = 0
         self.__last_status = WheelDriver.STOPPED
@@ -13,24 +12,15 @@ class Body:
         self.__time_scale = 1
 
     @property
-    def x(self):
-        return self.__x
+    def point(self):
+        return self.__point
 
-    @x.setter
-    def x(self, x):
-        self.__x = x
+    @point.setter
+    def point(self, point):
+        self.__point = point
 
-    @property
-    def y(self):
-        return self.__y
-
-    @y.setter
-    def y(self, y):
-        self.__y = y
-
-
-    def coordinate(self, translation_vector=[0, 0]):
-        return [self.x + translation_vector[0], self.y + translation_vector[1]]
+    def move(self, by):
+        self.__point = point.move(by)
 
     @property
     def time_scale(self):
@@ -68,18 +58,11 @@ class Body:
             return
         
         duration = current_time - last_status_changed
-
-        if last_status == WheelDriver.FORWARD:
-            self.__y = self.__y + (duration / 1000 * self.__time_scale * self.__speed)
-            return
-
-        if last_status == WheelDriver.REVERSING:
-            self.__y = self.__y - (duration / 1000 * self.__time_scale * self.__speed)
-            return
     
     def update(self, wheel_driver):
         duration = time.monotonic() - self.__last_status_changed
 
         if wheel_driver.status == WheelDriver.FORWARD:
-            self.__y = self.__y + (duration / 1000 * self.__time_scale * self.__speed)
+            vector = Point(0, (duration / 1000 * self.__time_scale * self.__speed))
+            self.__point = self.__point.move(vector)
             return

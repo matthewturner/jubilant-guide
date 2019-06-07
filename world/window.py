@@ -1,6 +1,6 @@
 import tkinter as tk
 import board
-from jubilant import Robot, Square, queue
+from jubilant import Robot, Square, queue, Point
 from world import WorkerWindow, MapCanvasManager, RobotCanvasManager, PinManager
 from functools import partial
 
@@ -43,8 +43,7 @@ class Window(WorkerWindow):
         self.__robot_canvas_manager.draw()
 
         self.__robot = Robot()
-        self.__robot.body.x = 100
-        self.__robot.body.y = 60
+        self.__robot.body.point = Point(100, 60)
         self.__robot.body.time_scale = 10
 
         self.__pin_manager = PinManager(self.__frame_right_bottom)
