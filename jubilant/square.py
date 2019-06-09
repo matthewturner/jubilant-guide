@@ -21,9 +21,9 @@ class Square:
     def points(self, scale=1):
         return (
             self.__point.scale(scale),
-            self.__point.move(Point(1, 0)).scale(scale),
-            self.__point.move(Point(1, 1)).scale(scale),
-            self.__point.move(Point(0, 1)).scale(scale)
+            self.__point.translate(Point(1, 0)).scale(scale),
+            self.__point.translate(Point(1, 1)).scale(scale),
+            self.__point.translate(Point(0, 1)).scale(scale)
         )
     
     def lines(self, scale=1, point=None):
@@ -37,15 +37,15 @@ class Square:
                 (points[3], points[0])
             )
         
-        lines = (
-            ((points[0], points[1]), (points[0].distance_from(point), points[1].distance_from(point)),
-            ((points[1], points[2]), (points[1].distance_from(point), points[2].distance_from(point)),
-            ((points[2], points[3]), (points[2].distance_from(point), points[3].distance_from(point)),
-            ((points[3], points[0]), (points[3].distance_from(point), points[0].distance_from(point))
-        )
+        lines = [
+            ((points[0], points[1]), points[0].distance_from(point) + points[1].distance_from(point)),
+            ((points[1], points[2]), points[1].distance_from(point) + points[2].distance_from(point)),
+            ((points[2], points[3]), points[2].distance_from(point) + points[3].distance_from(point)),
+            ((points[3], points[0]), points[3].distance_from(point) + points[0].distance_from(point))
+        ]
 
-        closest_lines = []
-        return closest_lines
+        lines.sort(key=lambda x: x[1])
+        return tuple([lines[0][0], lines[1][0]])
 
 
     @property

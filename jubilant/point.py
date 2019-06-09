@@ -9,11 +9,17 @@ class Point:
         self.__x = x
         self.__y = y
 
-    def move(self, by):
+    def translate(self, by):
         '''Determines where x and y move'''
         x = self.__x + by.x
         y = self.__y + by.y
         return Point(x, y)
+    
+    def move(self, angle, distance):
+        deltax = distance * math.sin(math.radians(angle))
+        deltay = distance * math.cos(math.radians(angle))
+
+        return Point(self.__x + deltax, self.__y + deltay)
 
     def __str__(self):
         return "Point(%s,%s)"%(self.X, self.Y) 

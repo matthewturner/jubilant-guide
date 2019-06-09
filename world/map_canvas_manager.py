@@ -66,23 +66,21 @@ class MapCanvasManager:
         self.__distance_from_obstacle(robot)
     
     def __distance_from_obstacle(self, robot):
+        north = robot.body.point.translate(Point(0, 1))
         for square in self.__map.interesting_squares():
-            angles = []
-            points = square.points()
-            for point in points:
-                north = robot.body.point.move(Point(0, 1)).scale(MapCanvasManager.SQUARE_SIZE)
-                angle = self.__angle(north, robot.body.point, point)
-                angles.append(angle)
-        
-            if len(angles) > 0:
-                if (angles[0] <= robot.body.heading <= angles[1]) or (angles[0] >= robot.body.heading >= angles[1]):
-                    print('This is my square!')
-                    point = points[0]
-                    distance_between = robot.body.point.distance_from(point)
-                    print(distance_between)
+            for line in square.lines(MapCanvasManager.SQUARE_SIZE, robot.body.point):
+                start_point = line[0]
+                end_point = line[1]
+                start_angle = self.__angle(north, robot.body.point, start_point)
+                end_angle = self.__angle(north, robot.body.point, end_point)
+                if (start_angle <= robot.body.heading <= end_angle) or (start_angle >= robot.body.heading >= end_angle):
+                    distance_between = robot.body.point.distance_from(start_point)
                     robot.vision.left_eye.sensor.distance = distance_between
                     robot.vision.right_eye.sensor.distance = distance_between
                     return
+        
+        robot.vision.left_eye.sensor.distance = 400
+        robot.vision.right_eye.sensor.distance = 400            
 
     def __angle(self, p0, p1, p2):
         ''' compute angle (in degrees) for p0p1p2 corner

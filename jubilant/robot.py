@@ -45,10 +45,10 @@ class Robot:
                         motion.bear_left()
         except CollisionWarning:
             led.on()
-            if something.is_closer_to_left():
-                motion.turn_right(90)
-            else:
+            if something.is_closer_to_right():
                 motion.turn_left(90)
+            else:
+                motion.turn_right(90)
 
     def start(self):
         queue.enqueue(self.__move, delay=0.01, repeat=True)
