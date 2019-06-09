@@ -60,6 +60,9 @@ class Square:
     def y(self):
         return self.__point.y
     
+    def center(self, scale=1):
+        return self.__point.translate(Point(0.5, 0.5)).scale(scale)
+
     @property
     def type(self):
         return self.__type

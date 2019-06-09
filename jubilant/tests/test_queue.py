@@ -2,7 +2,7 @@ from jubilant.queue import Queue
 import time
 
 
-class TestQueue(object):
+class TestQueue:
     def some_action(self):
         print('Do something')
 

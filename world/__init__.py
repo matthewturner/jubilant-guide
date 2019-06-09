@@ -1,3 +1,4 @@
+from .obstacle_identifier import ObstacleIdentifier
 from .map_canvas_manager import MapCanvasManager
 from .robot_canvas_manager import RobotCanvasManager
 from .pin_manager import PinManager
