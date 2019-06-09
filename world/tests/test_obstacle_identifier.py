@@ -1,26 +1,29 @@
 from world import ObstacleIdentifier
 from jubilant import Map, Square, Point, Robot
+import pytest
 
 
 class TestObstacleIdentifier:
-    def test_due_north(self):
+    @pytest.fixture
+    def map(self):
+        return Map('x', 10)
+
+    @pytest.fixture
+    def robot(self):
         robot = Robot()
-        robot.body.point = Point(10, 10)
+        robot.body.point = Point(20, 20)
         robot.body.heading = 0
-        square = Square(Point(1, 2), type=Square.SOLID)
-        map = Map('x', 10)
-        map.append(square)
+        return robot
 
+    def square(self, x, y):
+        return Square(Point(x, y), type=Square.SOLID)
+
+    def test_due_north(self, map, robot):
+        map.append(self.square(2, 4))
         target = ObstacleIdentifier(map)
-        assert(target.is_obstacle(square, robot))
+        assert(target.obstacle(robot))
 
-    def test_due_south(self):
-        robot = Robot()
-        robot.body.point = Point(10, 20)
-        robot.body.heading = 0
-        square = Square(Point(1, 1), type=Square.SOLID)
-        map = Map('x', 10)
-        map.append(square)
-
+    def test_due_south(self, map, robot):
+        map.append(self.square(2, 1))
         target = ObstacleIdentifier(map)
-        assert(not target.is_obstacle(square, robot))
+        assert(not target.obstacle(robot))
