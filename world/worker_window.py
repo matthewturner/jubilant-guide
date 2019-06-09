@@ -9,6 +9,7 @@ class WorkerWindow:
 
         self._init_layout()
 
+        self.__worker_thread = None
         self.__invoke_queue = Queue()
         self.__window.after(50, self.__process_queue)
 

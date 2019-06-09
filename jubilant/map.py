@@ -1,4 +1,4 @@
-from jubilant.square import Square
+from jubilant import Square, Point
 
 
 class Map:
@@ -34,13 +34,13 @@ class Map:
     def width(self):
         return max(self.__squares,
                    key=lambda s: s.x,
-                   default=Square(-1, 0, Square.OPEN)).x + 1
+                   default=Square(Point(-1, 0), Square.OPEN)).x + 1
 
     @property
     def height(self):
         return max(self.__squares,
                    key=lambda s: s.y,
-                   default=Square(0, -1, Square.OPEN)).y + 1
+                   default=Square(Point(0, -1), Square.OPEN)).y + 1
 
     def interesting_squares(self):
         return filter(lambda s: s.type != Square.OPEN, self.__squares)

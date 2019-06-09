@@ -1,6 +1,6 @@
 import tkinter as tk
 import board
-from jubilant import Robot, Square, queue
+from jubilant import Robot, Square, queue, Point
 from world import WorkerWindow, MapCanvasManager, RobotCanvasManager, PinManager
 from functools import partial
 
@@ -33,6 +33,9 @@ class Window(WorkerWindow):
         self.__button_start = tk.Button(
             self.__frame_right_top, text="Start", command=partial(self._start, self.__start_robot))
         self.__button_start.pack()
+        self.__button_ping = tk.Button(
+            self.__frame_right_top, text="Ping", command=self.__ping)
+        self.__button_ping.pack()
 
         self.__canvas_robot = tk.Canvas(self.__frame_right_middle, width=100)
         self.__canvas_robot.pack()
@@ -40,8 +43,7 @@ class Window(WorkerWindow):
         self.__robot_canvas_manager.draw()
 
         self.__robot = Robot()
-        self.__robot.body.x = 100
-        self.__robot.body.y = 60
+        self.__robot.body.point = Point(100, 60)
         self.__robot.body.time_scale = 10
 
         self.__pin_manager = PinManager(self.__frame_right_bottom)
@@ -63,6 +65,12 @@ class Window(WorkerWindow):
 
         while True:
             queue.work_off()
+
+    def __ping(self):
+        self.__pin_manager.listener = None
+        print(self.__robot.vision.right_eye.distance)
+        self.__map_canvas_manager.locate(self.__robot)
+        self.__pin_manager.listener = self.__pin_listener
 
     def __pin_listener(self, args=None):
         if self._invoke_required:

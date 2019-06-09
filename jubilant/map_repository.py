@@ -1,5 +1,4 @@
-from .square import Square
-from .map import Map
+from jubilant import Square, Point, Map
 import json
 
 class MapRepository:
@@ -17,9 +16,9 @@ class MapRepository:
                 for x in range(data['width']):
                     matching_square = self.match(x, y, data['squares'])
                     if matching_square:
-                        map.append(Square(x, y, type_name=matching_square['type']))
+                        map.append(Square(Point(x, y), type_name=matching_square['type']))
                     else:
-                        map.append(Square(x, y, Square.OPEN))
+                        map.append(Square(Point(x, y), Square.OPEN))
         return map
 
     

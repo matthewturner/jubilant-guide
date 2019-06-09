@@ -1,32 +1,27 @@
-from jubilant import WheelDriver
+from jubilant import WheelDriver, Point
 import time
 
 
 class Body:
     def __init__(self):
-        self.__x = 0
-        self.__y = 0
+        self.__point = Point(0, 0)
         self.__speed = 0
         self.__heading = 0
         self.__last_status = WheelDriver.STOPPED
         self.__last_status_changed = time.monotonic()
         self.__time_scale = 1
+        self.__turn_speed = 0
 
     @property
-    def x(self):
-        return self.__x
+    def point(self):
+        return self.__point
 
-    @x.setter
-    def x(self, x):
-        self.__x = x
+    @point.setter
+    def point(self, point):
+        self.__point = point
 
-    @property
-    def y(self):
-        return self.__y
-
-    @y.setter
-    def y(self, y):
-        self.__y = y
+    def move(self, by):
+        self.__point = point.translate(by)
 
     @property
     def time_scale(self):
@@ -54,28 +49,34 @@ class Body:
         self.__last_status = current_status
         self.__last_status_changed = current_time
 
+        if current_status == WheelDriver.STOPPED:
+            self.__speed = 0
+
         if current_status == WheelDriver.FORWARD:
             self.__speed = 5
 
         if current_status == WheelDriver.REVERSING:
             self.__speed = 5
 
-        if last_status == WheelDriver.STOPPED:
-            return
+        if last_status == WheelDriver.TURNING_LEFT:
+            self.__speed = 0
+            self.__turn_speed = -2.5
+        
+        if last_status == WheelDriver.TURNING_RIGHT:
+            self.__speed = 0
+            self.__turn_speed = 2.5
         
         duration = current_time - last_status_changed
-
-        if last_status == WheelDriver.FORWARD:
-            self.__y = self.__y + (duration / 1000 * self.__time_scale * self.__speed)
-            return
-
-        if last_status == WheelDriver.REVERSING:
-            self.__y = self.__y - (duration / 1000 * self.__time_scale * self.__speed)
-            return
     
     def update(self, wheel_driver):
         duration = time.monotonic() - self.__last_status_changed
 
         if wheel_driver.status == WheelDriver.FORWARD:
-            self.__y = self.__y + (duration / 1000 * self.__time_scale * self.__speed)
+            distance_travelled = duration / 1000 * self.__time_scale * self.__speed
+            self.__point = self.__point.move(self.__heading, distance_travelled)
+            return
+        
+        if wheel_driver.status == WheelDriver.TURNING_LEFT or wheel_driver.status == WheelDriver.TURNING_RIGHT:
+            self.__heading = (self.__heading + (duration * self.__time_scale * self.__turn_speed)) % 360
+            print('New heading: % 2d' % self.__heading)
             return
