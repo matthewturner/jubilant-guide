@@ -11,7 +11,7 @@ class TestObstacleIdentifier:
     @pytest.fixture
     def robot(self):
         robot = Robot()
-        robot.body.point = Point(20, 20)
+        robot.body.point = Point(40, 40)
         robot.body.heading = 0
         return robot
 
@@ -19,11 +19,16 @@ class TestObstacleIdentifier:
         return Square(Point(x, y), type=Square.SOLID)
 
     def test_due_north(self, map, robot):
-        map.append(self.square(2, 4))
+        map.append(self.square(4, 6))
         target = ObstacleIdentifier(map)
         assert(target.obstacle(robot))
 
+    def test_north_east(self, map, robot):
+        map.append(self.square(2.5, 5))
+        target = ObstacleIdentifier(map)
+        assert(not target.obstacle(robot))
+
     def test_due_south(self, map, robot):
-        map.append(self.square(2, 1))
+        map.append(self.square(4, 2))
         target = ObstacleIdentifier(map)
         assert(not target.obstacle(robot))

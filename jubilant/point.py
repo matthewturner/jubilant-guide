@@ -21,8 +21,8 @@ class Point:
 
         return Point(self.__x + deltax, self.__y + deltay)
 
-    def __str__(self):
-        return "Point(%s,%s)"%(self.X, self.Y) 
+    def __repr__(self):
+        return "Point(%s, %s)" % (self.__x, self.__y) 
 
     @property
     def x(self):

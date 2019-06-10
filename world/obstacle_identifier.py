@@ -14,7 +14,7 @@ class ObstacleIdentifier:
         return None
 
     def is_obstacle(self, square, robot):
-        north = robot.body.point.translate(Point(0, 1))
+        north = robot.body.point.translate(Point(0, self.__map.square_size))
         for line in square.lines(self.__map.square_size, robot.body.point):
             start_point = line[0]
             end_point = line[1]
@@ -33,4 +33,7 @@ class ObstacleIdentifier:
         v1 = np.array(p2.array()) - np.array(p1.array())
 
         angle = np.math.atan2(np.linalg.det([v0, v1]), np.dot(v0, v1))
-        return np.degrees(angle)
+        angle = round(np.degrees(angle), 2)
+        if angle < 0:
+            angle = angle + 360
+        return angle
