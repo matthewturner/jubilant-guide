@@ -13,7 +13,10 @@ class MapCanvasManager:
         self.__canvas.bind("<Configure>", self.__configure)
         self.__canvas.tag_bind(
             'square', '<ButtonPress-1>', self.__on_square_click)
+        self.__robot_last_square = None
         self.__robot_last_position = None
+        self.__robot_avatar = None
+        self.__square_size = 1
 
         self.__map_repository = MapRepository()
         self.__map = Map('map', square_size_cm=MapCanvasManager.SQUARE_SIZE)
@@ -35,7 +38,9 @@ class MapCanvasManager:
 
     def __draw(self, max_width=None):
         self.__canvas.delete("all")
-        square_size = int((max_width - 10) / self.__map.width)
+        self.__robot_last_position = None
+        self.__robot_avatar = None
+        self.__square_size = square_size = int((max_width - 10) / self.__map.width)
         self.__square_map.clear()
         for square in self.__map.squares:
             fill = self.__fill_for(square.type)
@@ -58,12 +63,35 @@ class MapCanvasManager:
         robot.update()
         square = self.__map.locate(robot.body.point.x, robot.body.point.y)
 
-        if self.__robot_last_position:
-            self.__canvas.itemconfigure(
-                self.__robot_last_position, fill='gray')
-        self.__robot_last_position = self.__find_square(square)
-        self.__canvas.itemconfigure(self.__robot_last_position, fill='pink')
+        if self.__robot_last_square:
+            self.__canvas.itemconfigure(self.__robot_last_square, fill='gray')
+        self.__robot_last_square = self.__find_square(square)
+        self.__canvas.itemconfigure(self.__robot_last_square, fill='pink')
+        self.__draw_robot(robot)
         self.__distance_from_obstacle(robot)
+
+    def __create_circle(self, x, y, r, fill='green'):
+        x0 = x - r
+        y0 = y - r
+        x1 = x + r
+        y1 = y + r
+        return self.__canvas.create_oval(x0, y0, x1, y1, fill=fill)
+
+    def __draw_robot(self, robot):
+        if not self.__robot_avatar:            
+            current_position = robot.body.point
+            square = self.__map.locate(robot.body.point.x, robot.body.point.y)
+            print("Square position %s" % square)
+            print("Robot current position %s" % current_position)
+            avatar_size = self.__square_size / 2
+            if avatar_size < 2: avatar_size = 2
+            self.__robot_avatar = self.__create_circle(current_position.x, current_position.y, avatar_size)
+            self.__robot_last_position = robot.body.point
+
+        delta = Point(robot.body.point.x - self.__robot_last_position.x, robot.body.point.y - self.__robot_last_position.y)
+        
+        self.__canvas.move(self.__robot_avatar, delta.x, delta.y)
+        self.__robot_last_position = robot.body.point
     
     def __distance_from_obstacle(self, robot):
         square = self.__obstacle_identifier.obstacle(robot)

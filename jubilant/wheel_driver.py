@@ -61,8 +61,7 @@ class WheelDriver:
         if self.status == WheelDriver.TURNING_RIGHT:
             return
         self.status = WheelDriver.TURNING_RIGHT
-        message = 'Turning right...'
-        print(message)
+        print('Turning right...')
         self.__right_wheel.forward()
         self.__left_wheel.reverse()
         queue.enqueue(self.stop, self.__time_to_turn(degrees))
@@ -71,8 +70,7 @@ class WheelDriver:
         if self.status == WheelDriver.TURNING_LEFT:
             return
         self.status = WheelDriver.TURNING_LEFT
-        message = 'Turning left...'
-        print(message)
+        print('Turning left...')
         self.__right_wheel.reverse()
         self.__left_wheel.forward()
         queue.enqueue(self.stop, self.__time_to_turn(degrees))

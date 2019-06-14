@@ -55,6 +55,7 @@ class Body:
 
         if current_status == WheelDriver.STOPPED:
             self.__speed = 0
+            self.__turn_speed = 0
 
         if current_status == WheelDriver.FORWARD:
             self.__speed = 5
@@ -62,13 +63,13 @@ class Body:
         if current_status == WheelDriver.REVERSING:
             self.__speed = 5
 
-        if last_status == WheelDriver.TURNING_LEFT:
+        if current_status == WheelDriver.TURNING_LEFT:
             self.__speed = 0
-            self.__turn_speed = -2.5
+            self.__turn_speed = -0.49
         
-        if last_status == WheelDriver.TURNING_RIGHT:
+        if current_status == WheelDriver.TURNING_RIGHT:
             self.__speed = 0
-            self.__turn_speed = 2.5
+            self.__turn_speed = 0.49
         
         duration = current_time - last_status_changed
     
@@ -81,6 +82,6 @@ class Body:
             return
         
         if wheel_driver.status == WheelDriver.TURNING_LEFT or wheel_driver.status == WheelDriver.TURNING_RIGHT:
-            self.__heading = (self.__heading + (duration * self.__time_scale * self.__turn_speed)) % 360
+            self.__heading = (self.__heading + (duration * self.__turn_speed)) % 360
             print('New heading: % 2d' % self.__heading)
             return
