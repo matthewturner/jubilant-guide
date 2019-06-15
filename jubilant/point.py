@@ -11,8 +11,16 @@ class Point:
 
     def translate(self, by):
         '''Determines where x and y move'''
-        x = self.__x + by.x
-        y = self.__y + by.y
+        return self + by;
+
+    def __add__(self, other):
+        x = self.__x + other.x
+        y = self.__y + other.y
+        return Point(x, y)
+
+    def __subtract__(self, other):
+        x = self.__x - other.x
+        y = self.__y - other.y
         return Point(x, y)
     
     def move(self, angle, distance):

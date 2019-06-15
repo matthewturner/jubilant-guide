@@ -18,6 +18,9 @@ class Square:
         if type_name:
             self.__type = self.type_from_name(type_name)
 
+    def __repr__(self):
+        return "Square({}, type_name='{}')".format(repr(self.__point), self.type_name)
+
     def points(self, scale=1):
         return (
             self.__point.scale(scale),
