@@ -1,7 +1,7 @@
 from jubilant import Swirl, Led, Vision, \
     queue, WheelDriver, CollisionWarning, \
     Body
-from jubilant import Queueable as queueable
+from jubilant import Queueable as async
 
 
 class Robot:
@@ -28,7 +28,7 @@ class Robot:
     def update(self):
         self.__body.update(self.__motion)
 
-    @queueable(delay=0.01, repeat=True)
+    @async(delay=0.01, repeat=True)
     def __move_async(self):
         something = self.__vision
         motion = self.__motion

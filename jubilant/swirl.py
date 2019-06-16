@@ -1,6 +1,6 @@
 import neopixel
 import board
-from .queueable import Queueable as queueable
+from .queueable import Queueable as async
 
 
 class Swirl:
@@ -22,7 +22,7 @@ class Swirl:
         self.__neopixels.show()
         self.__i = (self.__i + 1) % 256
 
-    @queueable(repeat=True)
+    @async(repeat=True)
     def next_async(self):
         self.next()
 
