@@ -1,5 +1,6 @@
 import neopixel
 import board
+from .queueable import Queueable as async
 
 
 class Swirl:
@@ -20,6 +21,10 @@ class Swirl:
             self.__neopixels[p] = self.__color(idx & 255)
         self.__neopixels.show()
         self.__i = (self.__i + 1) % 256
+
+    @async(repeat=True)
+    def next_async(self):
+        self.next()
 
     def __color(self, pos):
         # Input a value 0 to 255 to get a color value.

@@ -1,3 +1,5 @@
+from .task import Task
+from .queueable import Queueable
 from .queue import Queue, queue
 from .point import Point
 from .swirl import Swirl

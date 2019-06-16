@@ -88,7 +88,7 @@ class MapCanvasManager:
             self.__robot_avatar = self.__create_circle(current_position.x, current_position.y, avatar_size)
             self.__robot_last_position = robot.body.point
 
-        delta = Point(robot.body.point.x - self.__robot_last_position.x, robot.body.point.y - self.__robot_last_position.y)
+        delta = robot.body.point - self.__robot_last_position
         
         self.__canvas.move(self.__robot_avatar, delta.x, delta.y)
         self.__robot_last_position = robot.body.point

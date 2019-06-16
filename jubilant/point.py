@@ -18,7 +18,7 @@ class Point:
         y = self.__y + other.y
         return Point(x, y)
 
-    def __subtract__(self, other):
+    def __sub__(self, other):
         x = self.__x - other.x
         y = self.__y - other.y
         return Point(x, y)
