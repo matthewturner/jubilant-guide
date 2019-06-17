@@ -22,9 +22,9 @@ class Map:
     def square_size(self):
         return self.__square_size
 
-    def locate(self, x_cm, y_cm):
-        x = int(x_cm / self.__square_size)
-        y = int(y_cm / self.__square_size)
+    def locate(self, point_cm):
+        x = int(point_cm.x / self.__square_size)
+        y = int(point_cm.y / self.__square_size)
         for s in self.__squares:
             if s.x == x and s.y == y:
                 return s

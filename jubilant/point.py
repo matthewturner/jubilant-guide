@@ -14,20 +14,20 @@ class Point:
         return self + by;
 
     def __add__(self, other):
-        x = self.__x + other.x
-        y = self.__y + other.y
+        x = self.__x + other.__x
+        y = self.__y + other.__y
         return Point(x, y)
 
     def __sub__(self, other):
-        x = self.__x - other.x
-        y = self.__y - other.y
+        x = self.__x - other.__x
+        y = self.__y - other.__y
         return Point(x, y)
     
     def move(self, angle, distance):
         deltax = distance * math.sin(math.radians(angle))
         deltay = distance * math.cos(math.radians(angle))
 
-        return Point(self.__x + deltax, self.__y + deltay)
+        return self + Point(deltax, deltay)
 
     def __repr__(self):
         return "Point(%s, %s)" % (self.__x, self.__y) 
@@ -41,9 +41,8 @@ class Point:
         return self.__y
 
     def distance_from(self, other):
-        dx = self.x - other.x
-        dy = self.y - other.y
-        return math.hypot(dx, dy)
+        d = self - other
+        return math.hypot(d.__x, d.__y)
 
     def scale(self, by):
         return Point(self.__x * by, self.__y * by)

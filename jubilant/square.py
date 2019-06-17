@@ -56,6 +56,10 @@ class Square:
         return Square.TYPE_NAMES[self.__type]
 
     @property
+    def point(self):
+        return self.__point
+
+    @property
     def x(self):
         return self.__point.x
     
