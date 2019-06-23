@@ -22,6 +22,9 @@ class Point:
         x = self.__x - other.__x
         y = self.__y - other.__y
         return Point(x, y)
+
+    def __eq__(self, other):
+        return self.__x == other.__x and self.__y == other.__y
     
     def move(self, angle, distance):
         deltax = distance * math.sin(math.radians(angle))

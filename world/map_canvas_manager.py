@@ -48,10 +48,10 @@ class MapCanvasManager:
         self.__square_map.clear()
         for square in self.__map.squares:
             fill = self.__fill_for(square.type)
-            tl = Point(square.x * square_size + MapCanvasManager.PADDING,
-                       square.y * square_size + MapCanvasManager.PADDING)
-            br = Point(square.x * square_size + square_size + MapCanvasManager.PADDING,
-                       square.y * square_size + square_size + MapCanvasManager.PADDING)
+            tl = Point(square.point.x * square_size + MapCanvasManager.PADDING,
+                       square.point.y * square_size + MapCanvasManager.PADDING)
+            br = Point(square.point.x * square_size + square_size + MapCanvasManager.PADDING,
+                       square.point.y * square_size + square_size + MapCanvasManager.PADDING)
             rectangle_id = self.__canvas.create_rectangle(
                 tl.x, tl.y, br.x, br.y, fill=fill, outline='black', tags='square')
             self.__square_map[rectangle_id] = (square, tl)

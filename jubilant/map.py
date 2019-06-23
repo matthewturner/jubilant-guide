@@ -26,21 +26,21 @@ class Map:
         x = int(point_cm.x / self.__square_size)
         y = int(point_cm.y / self.__square_size)
         for s in self.__squares:
-            if s.x == x and s.y == y:
+            if s.point.x == x and s.point.y == y:
                 return s
         return None
 
     @property
     def width(self):
         return max(self.__squares,
-                   key=lambda s: s.x,
-                   default=Square(Point(-1, 0), Square.OPEN)).x + 1
+                   key=lambda s: s.point.x,
+                   default=Square(Point(-1, 0), Square.OPEN)).point.x + 1
 
     @property
     def height(self):
         return max(self.__squares,
-                   key=lambda s: s.y,
-                   default=Square(Point(0, -1), Square.OPEN)).y + 1
+                   key=lambda s: s.point.y,
+                   default=Square(Point(0, -1), Square.OPEN)).point.y + 1
 
     def interesting_squares(self):
         return filter(lambda s: s.type != Square.OPEN, self.__squares)

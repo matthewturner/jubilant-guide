@@ -8,6 +8,11 @@ class TestPoint:
         assert(actual.x == 14)
         assert(actual.y == 15)
 
+    def test_equal(self):
+        actual = Point(9, 11)
+        other = Point(9, 11)
+        assert(actual == other)
+
     def test_subtract(self):
         actual = Point(9, 11) - Point(5, 4)
         assert(actual.x == 4)
