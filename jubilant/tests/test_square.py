@@ -26,9 +26,8 @@ class TestSquare:
 
     def test_lines_closest_to_north(self):
         target = Square(Point(1, 1))
-        actual = target.lines(scale=10, point=Point(15, 15))
-        assert(actual[0] == (Point(10, 10), Point(20, 10)))
-        # assert(actual == ((Point(10, 10), Point(20, 10))))
+        actual = target.lines(scale=10, point=Point(15, 5))
+        assert(actual == ((Point(10, 10), Point(20, 10)),))
     
     def test_center(self):
         target = Square(Point(1, 1))

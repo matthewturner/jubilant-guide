@@ -53,7 +53,13 @@ class Square:
         ]
 
         lines.sort(key=lambda x: x[1])
-        return tuple([lines[0][0], lines[1][0]])
+        line_a = lines[0][0]
+        line_b = lines[1][0]
+        angle_a = point.angle(line_a[0], line_a[1])
+        angle_b = point.angle(line_b[0], line_b[1])
+        if angle_a > angle_b:
+            return tuple([line_a])
+        return tuple([line_a, line_b])
 
     @property
     def type_name(self):
