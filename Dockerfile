@@ -4,6 +4,9 @@ RUN apk update \
   && apk add \
     build-base
 
+RUN pip install --upgrade pip \
+  && pip install pytest
+
 RUN mkdir /usr/src/app
 WORKDIR /usr/src/app
 COPY ./requirements.txt .
