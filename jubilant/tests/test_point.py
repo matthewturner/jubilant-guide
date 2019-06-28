@@ -38,6 +38,10 @@ class TestPoint:
         actual = Point(9, 11).distance_from(Point(10, 12))
         assert(round(actual, 2) == 1.41)
 
-    def test_angle_between(self):
+    def test_angle_between_three_points(self):
         actual = Point(10, 0).angle(Point(5, 5), Point(15, 5))
         assert(round(actual, 2) == 90)
+
+    def test_bearing(self):
+        actual = Point(10, 0).bearing(Point(5, 5))
+        assert(round(actual, 2) == 45)

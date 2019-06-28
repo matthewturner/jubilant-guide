@@ -24,19 +24,29 @@ class TestSquare:
         assert(actual[2] == (Point(2, 2), Point(1, 2)))
         assert(actual[3] == (Point(1, 2), Point(1, 1)))
 
-    def test_lines_closest_to_north(self):
-        target = Square(Point(1, 1))
-        actual = target.lines(scale=10, point=Point(15, 5))
+    def test_lines_closest_to_south(self):
+        target = Square(Point(1, 1), scale=10)
+        actual = target.lines(point=Point(15, 5))
         assert(actual == ((Point(10, 10), Point(20, 10)),))
+
+    def test_lines_closest_to_east(self):
+        target = Square(Point(1, 1), scale=10)
+        actual = target.lines(point=Point(5, 15))
+        assert(actual == ((Point(10, 20), Point(10, 10)),))
     
+    def test_lines_closest_to_south_east(self):
+        target = Square(Point(1, 1), scale=10)
+        actual = target.lines(point=Point(5, 5))
+        assert(actual == ((Point(10, 10), Point(20, 10)), (Point(10, 20), Point(10, 10))))
+
     def test_center(self):
-        target = Square(Point(1, 1))
-        actual = target.center(scale=10)
+        target = Square(Point(1, 1), scale=10)
+        actual = target.center()
         assert(actual == Point(15, 15))
     
     def test_center_with_large_origin(self):
-        target = Square(Point(12, 12))
-        actual = target.center(scale=10)
+        target = Square(Point(12, 12), scale=10)
+        actual = target.center()
         assert(actual == Point(125, 125))
 
     def test_next_type_after_open(self):

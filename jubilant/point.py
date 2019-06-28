@@ -54,6 +54,10 @@ class Point:
     def array(self):
         return [self.__x, self.__y]
 
+    def bearing(self, to):
+        north = self + Point(0, 1)
+        return self.angle(north, to)
+
     def angle(self, p0, p2):
         p1 = self
         ''' compute angle (in degrees) for p0p1p2 corner

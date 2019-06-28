@@ -12,8 +12,9 @@ class Square:
         TRANSPARENT: 'transparent'
     }
 
-    def __init__(self, point, type=OPEN, type_name=None):
+    def __init__(self, point, type=OPEN, type_name=None, scale=1):
         self.__point = point
+        self.__scale = scale
         if type != None:
             self.__type = type
         if type_name:
@@ -23,11 +24,12 @@ class Square:
         return "Square({}, type_name='{}')".format(repr(self.__point), self.type_name)
 
     def points(self, scale=1):
+        adjusted_scale = scale * self.__scale
         return (
-            self.__point.scale(scale),
-            self.__point.translate(Point(1, 0)).scale(scale),
-            self.__point.translate(Point(1, 1)).scale(scale),
-            self.__point.translate(Point(0, 1)).scale(scale)
+            self.__point.scale(adjusted_scale),
+            self.__point.translate(Point(1, 0)).scale(adjusted_scale),
+            self.__point.translate(Point(1, 1)).scale(adjusted_scale),
+            self.__point.translate(Point(0, 1)).scale(adjusted_scale)
         )
 
     def lines(self, scale=1, point=None):
@@ -70,7 +72,7 @@ class Square:
         return self.__point
 
     def center(self, scale=1):
-        return self.__point.translate(Point(0.5, 0.5)).scale(scale)
+        return self.__point.translate(Point(0.5, 0.5)).scale(scale * self.__scale)
 
     @property
     def type(self):
