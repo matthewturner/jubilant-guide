@@ -56,9 +56,9 @@ class Point:
 
     def bearing(self, to):
         north = self + Point(0, 1)
-        return self.angle(north, to)
+        return self.angle(north, to, bearing=True)
 
-    def angle(self, p0, p2):
+    def angle(self, p0, p2, bearing=False):
         p1 = self
         ''' compute angle (in degrees) for p0p1p2 corner
         Inputs:
@@ -69,7 +69,9 @@ class Point:
 
         angle = np.math.atan2(np.linalg.det([v0, v1]), np.dot(v0, v1))
         angle = round(np.degrees(angle), 2)
-        if angle < 0:
-            angle = angle + 360
-        angle = angle % 180
+        if bearing:
+            if angle < 0:
+                angle = angle + 360
+        else:
+            angle = angle % 180
         return angle

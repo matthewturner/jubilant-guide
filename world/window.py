@@ -1,8 +1,14 @@
 import tkinter as tk
 import board
+import logging
 from jubilant import Robot, Square, queue, Point
 from world import WorkerWindow, MapCanvasManager, RobotCanvasManager, PinManager
 from functools import partial
+
+
+logging.basicConfig(level=logging.INFO)
+
+_logger = logging.getLogger(__name__)
 
 
 class Window(WorkerWindow):
@@ -68,7 +74,7 @@ class Window(WorkerWindow):
 
     def __ping(self):
         self.__pin_manager.listener = None
-        print(self.__robot.vision.right_eye.distance)
+        _logger.debug(self.__robot.vision.right_eye.distance)
         self.__map_canvas_manager.locate(self.__robot)
         self.__pin_manager.listener = self.__pin_listener
 

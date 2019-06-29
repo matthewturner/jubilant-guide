@@ -8,7 +8,7 @@ class ObstacleIdentifier:
         self.__map = map
 
     def obstacle(self, robot):
-        for square in self.__map.interesting_squares():
+        for square in self.__map.interesting_squares:
             if self.is_obstacle(square, robot):
                 return square
         return None
@@ -16,24 +16,9 @@ class ObstacleIdentifier:
     def is_obstacle(self, square, robot):
         north = robot.body.point.translate(Point(0, self.__map.square_size))
         for line in square.lines(self.__map.square_size, robot.body.point):
-            start_point = line[0]
-            end_point = line[1]
-            start_angle = self.__angle(north, robot.body.point, start_point)
-            end_angle = self.__angle(north, robot.body.point, end_point)
+            start_point, end_point = line
+            start_angle = robot.body.point.angle(north, start_point, bearing=True)
+            end_angle = robot.body.point.angle(north, end_point, bearing=True)
             if (start_angle <= robot.body.heading <= end_angle) or (start_angle >= robot.body.heading >= end_angle):
                 return True
         return False
-
-    def __angle(self, p0, p1, p2):
-        ''' compute angle (in degrees) for p0p1p2 corner
-        Inputs:
-            p0,p1,p2 - points in the form of [x,y]
-        '''
-        v0 = np.array(p0.array()) - np.array(p1.array())
-        v1 = np.array(p2.array()) - np.array(p1.array())
-
-        angle = np.math.atan2(np.linalg.det([v0, v1]), np.dot(v0, v1))
-        angle = round(np.degrees(angle), 2)
-        if angle < 0:
-            angle = angle + 360
-        return angle

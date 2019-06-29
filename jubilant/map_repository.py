@@ -28,7 +28,7 @@ class MapRepository:
         m['width'] = map.width
         m['height'] = map.height
         squares = m['squares'] = []
-        for square in map.interesting_squares():
+        for square in map.interesting_squares:
             squares.append({
                 'x': square.x,
                 'y': square.y,

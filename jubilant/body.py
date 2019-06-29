@@ -1,5 +1,8 @@
 from jubilant import WheelDriver, Point
 import time
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class Body:
@@ -66,22 +69,24 @@ class Body:
         if current_status == WheelDriver.TURNING_LEFT:
             self.__speed = 0
             self.__turn_speed = -0.49
-        
+
         if current_status == WheelDriver.TURNING_RIGHT:
             self.__speed = 0
             self.__turn_speed = 0.49
-        
+
         duration = current_time - last_status_changed
-    
+
     def update(self, wheel_driver):
         duration = time.monotonic() - self.__last_status_changed
 
         if wheel_driver.status == WheelDriver.FORWARD:
             distance_travelled = duration / 1000 * self.__time_scale * self.__speed
-            self.__point = self.__point.move(self.__heading, distance_travelled)
+            self.__point = self.__point.move(
+                self.__heading, distance_travelled)
             return
-        
+
         if wheel_driver.status == WheelDriver.TURNING_LEFT or wheel_driver.status == WheelDriver.TURNING_RIGHT:
-            self.__heading = (self.__heading + (duration * self.__turn_speed)) % 360
-            print('New heading: % 2d' % self.__heading)
+            self.__heading = (
+                self.__heading + (duration * self.__turn_speed)) % 360
+            self.__logger.debug('New heading: % 2d' % self.__heading)
             return

@@ -1,6 +1,10 @@
 import board
+import logging
 from .eye import Eye
 from .collision_warning import CollisionWarning
+
+
+_logger = logging.getLogger(__name__)
 
 
 class Vision:
@@ -41,8 +45,9 @@ class Vision:
             last_distance = int(eye.last_distance)
             current_distance = int(eye.distance)
             if current_distance != last_distance:
-                print("Distance (%s): % 3d" % (eye.name, current_distance))
+                _logger.debug("Distance (%s): % 3d" %
+                              (eye.name, current_distance))
             return current_distance
         except RuntimeError:
-            print("Retrying!")
+            _logger.debug("Retrying!")
             return Vision.INFINITY

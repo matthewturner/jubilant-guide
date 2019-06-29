@@ -1,8 +1,11 @@
 import board
 import time
+import logging
 from digitalio import DigitalInOut, Direction, Pull
 from analogio import AnalogOut
 from jubilant import queue, Wheel
+
+_logger = logging.getLogger(__name__)
 
 
 class WheelDriver:
@@ -38,7 +41,7 @@ class WheelDriver:
     @property
     def listener(self):
         return self.__listener
-    
+
     @listener.setter
     def listener(self, listener):
         self.__listener = listener
@@ -52,7 +55,8 @@ class WheelDriver:
     @status.setter
     def status(self, status):
         self.__status = status
-        if self.__listener: self.__listener.on_status_changed(self.__status)
+        if self.__listener:
+            self.__listener.on_status_changed(self.__status)
 
     def __time_to_turn(self, degrees):
         return (360 / degrees / 8)
@@ -61,7 +65,7 @@ class WheelDriver:
         if self.status == WheelDriver.TURNING_RIGHT:
             return
         self.status = WheelDriver.TURNING_RIGHT
-        print('Turning right...')
+        _logger.debug('Turning right...')
         self.__right_wheel.forward()
         self.__left_wheel.reverse()
         queue.enqueue(self.stop, self.__time_to_turn(degrees))
@@ -70,7 +74,7 @@ class WheelDriver:
         if self.status == WheelDriver.TURNING_LEFT:
             return
         self.status = WheelDriver.TURNING_LEFT
-        print('Turning left...')
+        _logger.debug('Turning left...')
         self.__right_wheel.reverse()
         self.__left_wheel.forward()
         queue.enqueue(self.stop, self.__time_to_turn(degrees))
@@ -79,7 +83,7 @@ class WheelDriver:
         if self.status == WheelDriver.BEARING_RIGHT:
             return
         self.status = WheelDriver.BEARING_RIGHT
-        print('Bearing right...')
+        _logger.debug('Bearing right...')
         self.__right_wheel.forward()
         self.__left_wheel.stop()
         queue.enqueue(self.forward, 0.1)
@@ -88,7 +92,7 @@ class WheelDriver:
         if self.status == WheelDriver.BEARING_LEFT:
             return
         self.status = WheelDriver.BEARING_LEFT
-        print('Bearing left...')
+        _logger.debug('Bearing left...')
         self.__right_wheel.stop()
         self.__left_wheel.forward()
         queue.enqueue(self.forward, 0.1)
@@ -97,7 +101,7 @@ class WheelDriver:
         if self.status == WheelDriver.FORWARD:
             return
         self.status = WheelDriver.FORWARD
-        print('Moving forward...')
+        _logger.debug('Moving forward...')
         self.__right_wheel.forward()
         self.__left_wheel.forward()
 
@@ -105,7 +109,7 @@ class WheelDriver:
         if self.status == WheelDriver.REVERSING:
             return
         self.status = WheelDriver.REVERSING
-        print('Reversing...')
+        _logger.debug('Reversing...')
         self.__right_wheel.reverse()
         self.__left_wheel.reverse()
 
@@ -113,6 +117,6 @@ class WheelDriver:
         if self.status == WheelDriver.STOPPED:
             return
         self.status = WheelDriver.STOPPED
-        print('Stopping...')
+        _logger.debug('Stopping...')
         self.__right_wheel.stop()
         self.__left_wheel.stop()

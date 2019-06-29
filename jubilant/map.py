@@ -6,13 +6,19 @@ class Map:
         self.__id = id
         self.__square_size = square_size_cm
         self.__squares = []
+        self.__interesting_squares = None
 
     def append(self, square):
+        self.__interesting_squares = None
+        square.listener = self
         self.__squares.append(square)
+
+    def on_type_changed(self, type):
+        self.__interesting_squares = None
 
     @property
     def squares(self):
-        return self.__squares
+        return iter(self.__squares)
 
     @property
     def id(self):
@@ -42,5 +48,8 @@ class Map:
                    key=lambda s: s.point.y,
                    default=Square(Point(0, -1), Square.OPEN)).point.y + 1
 
+    @property
     def interesting_squares(self):
-        return filter(lambda s: s.type != Square.OPEN, self.__squares)
+        if not self.__interesting_squares:
+            self.__interesting_squares = list(filter(lambda s: s.type != Square.OPEN, self.__squares))
+        return self.__interesting_squares

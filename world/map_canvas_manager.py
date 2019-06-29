@@ -1,5 +1,8 @@
+import logging
 from jubilant import Square, Map, MapRepository, Point
 from world import ObstacleIdentifier
+
+_logger = logging.getLogger(__name__)
 
 
 class MapCanvasManager:
@@ -44,7 +47,8 @@ class MapCanvasManager:
         self.__robot_avatar = None
         self.__square_size = square_size = int(
             (max_width - 10) / self.__map.width)
-        self.__scale = (max_width - 10) / (self.__map.width * self.__map.square_size)
+        self.__scale = (max_width - 10) / \
+            (self.__map.width * self.__map.square_size)
         self.__square_map.clear()
         for square in self.__map.squares:
             fill = self.__fill_for(square.type)
@@ -84,7 +88,7 @@ class MapCanvasManager:
     def __draw_robot(self, robot):
         if not self.__robot_avatar:
             current_position = robot.body.point
-            print("Robot current position %s" % current_position)
+            _logger.debug("Robot current position %s" % current_position)
             avatar_size = self.__square_size / 2
             if avatar_size < 2:
                 avatar_size = 2
@@ -93,7 +97,8 @@ class MapCanvasManager:
                 canvas_position, avatar_size)
             self.__robot_last_position = robot.body.point
 
-        delta = (robot.body.point - self.__robot_last_position).scale(self.__scale)
+        delta = (robot.body.point -
+                 self.__robot_last_position).scale(self.__scale)
 
         self.__canvas.move(self.__robot_avatar, delta.x, delta.y)
         self.__robot_last_position = robot.body.point
