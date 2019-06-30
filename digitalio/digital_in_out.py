@@ -1,13 +1,13 @@
 from types import SimpleNamespace
-
+from events import Events
 
 class DigitalInOut:
     Instances = []
 
     def __init__(self, pin):
+        self.events = Events(('value_changed')) 
         self.__pin = pin
         self.__value = False
-        self.__listener = None
         DigitalInOut.Instances.append(self)
 
     @property
@@ -17,18 +17,9 @@ class DigitalInOut:
     @value.setter
     def value(self, value):
         self.__value = value
-        if self.__listener:
-            self.__listener(SimpleNamespace(
+        self.events.value_changed(SimpleNamespace(
                 pin=self.__pin, value=self.__value))
 
     @property
     def pin(self):
         return self.__pin
-
-    @property
-    def listener(self):
-        return self.__listener
-
-    @listener.setter
-    def listener(self, listener):
-        self.__listener = listener

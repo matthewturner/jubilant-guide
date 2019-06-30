@@ -1,4 +1,5 @@
 from jubilant import Point
+from events import Events
 
 
 class Square:
@@ -13,13 +14,13 @@ class Square:
     }
 
     def __init__(self, point, type=OPEN, type_name=None, scale=1):
+        self.events = Events(('type_changed'))
         self.__point = point
         self.__scale = scale
         if type != None:
             self.__type = type
         if type_name:
             self.__type = self.type_from_name(type_name)
-        self.__listener = None
 
     def __repr__(self):
         return "Square({}, type_name='{}')".format(repr(self.__point), self.type_name)
@@ -82,8 +83,7 @@ class Square:
     @type.setter
     def type(self, type):
         self.__type = type
-        if self.__listener:
-            self.__listener.on_type_changed(type)
+        self.events.type_changed(type)
 
     def type_from_name(self, name):
         for id, type_name in Square.TYPE_NAMES.items():
@@ -93,11 +93,3 @@ class Square:
 
     def next_type(self):
         return (self.__type + 1) % len(Square.TYPE_NAMES.keys())
-
-    @property
-    def listener(self):
-        return self.__listener
-
-    @listener.setter
-    def listener(self, listener):
-        self.__listener = listener

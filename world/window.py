@@ -53,7 +53,7 @@ class Window(WorkerWindow):
         self.__robot.body.time_scale = 10
 
         self.__pin_manager = PinManager(self.__frame_right_bottom)
-        self.__pin_manager.listener = self.__pin_listener
+        self.__pin_manager.events.pin_value_changed += self.__pin_value_changed
 
         self.__canvas = tk.Canvas(super().window)
         self.__canvas.pack(fill="both", expand=True)
@@ -73,14 +73,14 @@ class Window(WorkerWindow):
             queue.work_off()
 
     def __ping(self):
-        self.__pin_manager.listener = None
+        self.__pin_manager.events.pin_value_changed -= self.__pin_value_changed
         _logger.debug(self.__robot.vision.right_eye.distance)
         self.__map_canvas_manager.locate(self.__robot)
-        self.__pin_manager.listener = self.__pin_listener
+        self.__pin_manager.events.pin_value_changed += self.__pin_value_changed
 
-    def __pin_listener(self, args=None):
+    def __pin_value_changed(self, args=None):
         if self._invoke_required:
-            self._invoke(self.__pin_listener, args)
+            self._invoke(self.__pin_value_changed, args)
             return
 
         self.__pin_manager.update(args)

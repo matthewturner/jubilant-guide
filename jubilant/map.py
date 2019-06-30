@@ -10,10 +10,10 @@ class Map:
 
     def append(self, square):
         self.__interesting_squares = None
-        square.listener = self
+        square.events.type_changed += self.type_changed
         self.__squares.append(square)
 
-    def on_type_changed(self, type):
+    def type_changed(self, type):
         self.__interesting_squares = None
 
     @property

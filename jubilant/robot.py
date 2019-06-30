@@ -2,6 +2,7 @@ from jubilant import Swirl, Led, Vision, \
     queue, WheelDriver, CollisionWarning, \
     Body
 from jubilant import Queueable as asyncable
+from events import Events
 
 
 class Robot:
@@ -11,7 +12,7 @@ class Robot:
         self.__vision = Vision()
         self.__swirl = Swirl()
         self.__body = Body()
-        self.__motion.listener = self.__body
+        self.__motion.events.status_changed += self.body.status_changed
 
     @property
     def motion(self):

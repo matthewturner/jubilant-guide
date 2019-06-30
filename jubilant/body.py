@@ -46,7 +46,7 @@ class Body:
     def heading(self, heading):
         self.__heading = heading
 
-    def on_status_changed(self, args):
+    def status_changed(self, args):
         last_status = self.__last_status
         last_status_changed = self.__last_status_changed
 
